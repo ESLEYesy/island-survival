@@ -1,3 +1,3 @@
 # island-survival
-## To-do;
+## To-do:
 * Prototype networking with Mirror package
