@@ -299,6 +299,21 @@
  <Reference Include="UnityEngine.SpatialTracking">
  <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/UnitySpatialTracking/RuntimeEditor/UnityEngine.SpatialTracking.dll</HintPath>
  </Reference>
+ <Reference Include="Mirror.Weaver">
+ <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Mirror.Weaver.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Cecil">
+ <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Cecil.Pdb">
+ <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.Pdb.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Cecil.Mdb">
+ <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.Mdb.dll</HintPath>
+ </Reference>
+ <Reference Include="Telepathy">
+ <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Runtime/Transport/Telepathy/Telepathy.dll</HintPath>
+ </Reference>
  <Reference Include="Unity.Analytics.Tracker">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.Tracker.dll</HintPath>
  </Reference>
@@ -307,21 +322,6 @@
  </Reference>
  <Reference Include="Unity.Analytics.StandardEvents">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Library/PackageCache/com.unity.analytics@3.2.2/Unity.Analytics.StandardEvents.dll</HintPath>
- </Reference>
- <Reference Include="Mirror.Weaver">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Mirror.Weaver.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Cecil">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Cecil.Mdb">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.Mdb.dll</HintPath>
- </Reference>
- <Reference Include="Telepathy">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Runtime/Transport/Telepathy/Telepathy.dll</HintPath>
- </Reference>
- <Reference Include="Unity.Cecil.Pdb">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.Pdb.dll</HintPath>
  </Reference>
  <Reference Include="netstandard">
  <HintPath>/Applications/Unity/Unity.app/Contents/NetStandard/ref/2.0.0/netstandard.dll</HintPath>
