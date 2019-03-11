@@ -70,9 +70,16 @@
      <Compile Include="Assets\Mirror\Examples\Movement\Scripts\Move.cs" />
      <Compile Include="Assets\Mirror\Examples\Pong\Scripts\Ball.cs" />
      <Compile Include="Assets\Mirror\Examples\Pong\Scripts\Player.cs" />
+     <None Include="Assets\MegaPack1Lite\RomanCityPack1Lite\README.txt" />
      <None Include="Assets\Mirror\Readme.txt" />
      <None Include="Assets\Mirror\License.txt" />
      <None Include="Assets\Mirror\Examples\Movement\Models\(Public Domain) Quandtum BA-2\readme.txt" />
+     <None Include="Assets\MegaPack1Lite\EnchantedForestPack1\README.txt" />
+     <None Include="Assets\MegaPack1Lite\TropicalIslandPack1\README.txt" />
+     <None Include="Assets\MegaPack1Lite\ToolsAndWeapons\README.txt" />
+     <None Include="Assets\MegaPack1Lite\GreekPack1Lite\README.txt" />
+     <None Include="Assets\MegaPack1Lite\Steampunk\README.txt" />
+     <None Include="Assets\MegaPack1Lite\SciFiPack1\README.txt" />
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
