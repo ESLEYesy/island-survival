@@ -1,22 +1,28 @@
 using System;
 using System.IO;
+using System.Text;
 using UnityEngine;
 
 namespace Mirror
 {
     public class NetworkReader
     {
+        // cache encoding instead of creating it with BinaryWriter each time
+        // 1000 readers before:  1MB GC, 30ms
+        // 1000 readers after: 0.8MB GC, 18ms
+        static readonly UTF8Encoding encoding = new UTF8Encoding(false, true);
+
         readonly BinaryReader reader;
 
         public NetworkReader(byte[] buffer)
         {
-            reader = new BinaryReader(new MemoryStream(buffer));
+            reader = new BinaryReader(new MemoryStream(buffer, false), encoding);
         }
 
         // 'int' is the best type for .Position. 'short' is too small if we send >32kb which would result in negative .Position
         // -> converting long to int is fine until 2GB of data (MAX_INT), so we don't have to worry about overflows here
         public int Position { get { return (int)reader.BaseStream.Position; }  set { reader.BaseStream.Position = value; } }
-        public int Length => (int)reader.BaseStream.Length; 
+        public int Length => (int)reader.BaseStream.Length;
 
         public byte ReadByte() => reader.ReadByte();
         public sbyte ReadSByte() => reader.ReadSByte();
@@ -210,7 +216,7 @@ namespace Mirror
                 return identity.transform;
             }
 
-            if (LogFilter.Debug) { Debug.Log("ReadTransform netId:" + netId + " not found in spawned"); }
+            if (LogFilter.Debug) Debug.Log("ReadTransform netId:" + netId + " not found in spawned");
             return null;
         }
 
@@ -227,7 +233,7 @@ namespace Mirror
                 return identity.gameObject;
             }
 
-            if (LogFilter.Debug) { Debug.Log("ReadGameObject netId:" + netId + " not found in spawned"); }
+            if (LogFilter.Debug) Debug.Log("ReadGameObject netId:" + netId + " not found in spawned");
             return null;
         }
 
@@ -244,7 +250,7 @@ namespace Mirror
                 return identity;
             }
 
-            if (LogFilter.Debug) { Debug.Log("ReadNetworkIdentity netId:" + netId + " not found in spawned"); }
+            if (LogFilter.Debug) Debug.Log("ReadNetworkIdentity netId:" + netId + " not found in spawned");
             return null;
         }
 

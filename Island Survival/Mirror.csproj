@@ -347,9 +347,6 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
- <Reference Include="Mirror.Weaver">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Mirror.Weaver.dll</HintPath>
- </Reference>
  <Reference Include="Unity.Cecil">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.dll</HintPath>
  </Reference>

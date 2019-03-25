@@ -1,14 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using UnityEngine;
-
 #if UNITY_EDITOR
 using UnityEditor;
 #if UNITY_2018_3_OR_NEWER
-
 using UnityEditor.Experimental.SceneManagement;
-
 #endif
 #endif
 
@@ -21,7 +19,6 @@ namespace Mirror
     public sealed class NetworkIdentity : MonoBehaviour
     {
         // configuration
-        [SerializeField] uint m_SceneId;
         [SerializeField] bool m_ServerOnly;
         [SerializeField] bool m_LocalPlayerAuthority;
         bool m_IsServer;
@@ -33,15 +30,20 @@ namespace Mirror
 
         // properties
         public bool isClient { get; internal set; }
-        public bool isServer => m_IsServer && NetworkServer.active; // dont return true if server stopped.
+        // dont return true if server stopped.
+        public bool isServer
+        {
+            get => m_IsServer && NetworkServer.active && netId != 0;
+            internal set => m_IsServer = value;
+        }
         public bool isLocalPlayer { get; private set; }
         public bool hasAuthority { get; private set; }
 
         // <connectionId, NetworkConnection>
         public Dictionary<int, NetworkConnection> observers;
 
-        public uint netId { get; private set; }
-        public uint sceneId => m_SceneId;
+        public uint netId { get; internal set; }
+        public ulong sceneId => m_SceneId;
         public bool serverOnly { get { return m_ServerOnly; } set { m_ServerOnly = value; } }
         public bool localPlayerAuthority { get { return m_LocalPlayerAuthority; } set { m_LocalPlayerAuthority = value; } }
         public NetworkConnection clientAuthorityOwner { get; internal set; }
@@ -87,6 +89,13 @@ namespace Mirror
             }
         }
 
+        // persistent scene id <sceneHash/32,sceneId/32>
+        // (see AssignSceneID comments)
+        [SerializeField] ulong m_SceneId = 0;
+
+        // keep track of all sceneIds to detect scene duplicates
+        static Dictionary<ulong, NetworkIdentity> sceneIds = new Dictionary<ulong, NetworkIdentity>();
+
         // used when adding players
         internal void SetClientOwner(NetworkConnection conn)
         {
@@ -122,19 +131,6 @@ namespace Mirror
         public delegate void ClientAuthorityCallback(NetworkConnection conn, NetworkIdentity identity, bool authorityState);
         public static ClientAuthorityCallback clientAuthorityCallback;
 
-        // only used during spawning on clients to set the identity.
-        internal void SetNetworkInstanceId(uint newNetId)
-        {
-            netId = newNetId;
-            if (newNetId == 0)
-            {
-                m_IsServer = false;
-            }
-        }
-
-        // only used when fixing duplicate scene IDs during post-processing
-        public void ForceSceneId(uint newSceneId) => m_SceneId = newSceneId;
-
         // used when the player object for a connection changes
         internal void SetNotLocalPlayer()
         {
@@ -154,9 +150,9 @@ namespace Mirror
             observers?.Remove(conn.connectionId);
         }
 
-#if UNITY_EDITOR
         void OnValidate()
         {
+#if UNITY_EDITOR
             if (m_ServerOnly && m_LocalPlayerAuthority)
             {
                 Debug.LogWarning("Disabling Local Player Authority for " + gameObject + " because it is server-only.");
@@ -164,10 +160,13 @@ namespace Mirror
             }
 
             SetupIDs();
+#endif
         }
 
+#if UNITY_EDITOR
         void AssignAssetID(GameObject prefab) => AssignAssetID(AssetDatabase.GetAssetPath(prefab));
         void AssignAssetID(string path) => m_AssetId = AssetDatabase.AssetPathToGUID(path);
+
         bool ThisIsAPrefab() => PrefabUtility.IsPartOfPrefabAsset(gameObject);
 
         bool ThisIsASceneObjectWithPrefabParent(out GameObject prefab)
@@ -188,30 +187,146 @@ namespace Mirror
             return true;
         }
 
+        // persistent sceneId assignment
+        // (because scene objects have no persistent unique ID in Unity)
+        //
+        // original UNET used OnPostProcessScene to assign an index based on
+        // FindObjectOfType<NetworkIdentity> order.
+        // -> this didn't work because FindObjectOfType order isn't deterministic.
+        // -> one workaround is to sort them by sibling paths, but it can still
+        //    get out of sync when we open scene2 in editor and we have
+        //    DontDestroyOnLoad objects that messed with the sibling index.
+        //
+        // we absolutely need a persistent id. challenges:
+        // * it needs to be 0 for prefabs
+        //   => we set it to 0 in SetupIDs() if prefab!
+        // * it needs to be only assigned in edit time, not at runtime because
+        //   only the objects that were in the scene since beginning should have
+        //   a scene id.
+        //   => Application.isPlaying check solves that
+        // * it needs to detect duplicated sceneIds after duplicating scene
+        //   objects
+        //   => sceneIds dict takes care of that
+        // * duplicating the whole scene file shouldn't result in duplicate
+        //   scene objects
+        //   => buildIndex is shifted into sceneId for that.
+        //   => if we have no scenes in build index then it doesn't matter
+        //      because by definition a build can't switch to other scenes
+        //   => if we do have scenes in build index then it will be != -1
+        //   note: the duplicated scene still needs to be opened once for it to
+        //          be set properly
+        // * scene objects need the correct scene index byte even if the scene's
+        //   build index was changed or a duplicated scene wasn't opened yet.
+        //   => OnPostProcessScene is the only function that gets called for
+        //      each scene before runtime, so this is where we set the scene
+        //      byte.
+        // * disabled scenes in build settings should result in same scene index
+        //   in editor and in build
+        //   => .gameObject.scene.buildIndex filters out disabled scenes by
+        //      default
+        // * generated sceneIds absolutely need to set scene dirty and force the
+        //   user to resave.
+        //   => Undo.RecordObject does that perfectly.
+        // * sceneIds should never be generated temporarily for unopened scenes
+        //   when building, otherwise editor and build get out of sync
+        //   => BuildPipeline.isBuildingPlayer check solves that
+        void AssignSceneID()
+        {
+            // we only ever assign sceneIds at edit time, never at runtime.
+            // by definition, only the original scene objects should get one.
+            // -> if we assign at runtime then server and client would generate
+            //    different random numbers!
+            if (Application.isPlaying)
+                return;
+
+            // no valid sceneId yet, or duplicate?
+            NetworkIdentity existing;
+            bool duplicate = sceneIds.TryGetValue(m_SceneId, out existing) && existing != null && existing != this;
+            if (m_SceneId == 0 || duplicate)
+            {
+                // if a scene was never opened and we are building it, then a
+                // sceneId would be assigned to build but not saved in editor,
+                // resulting in them getting out of sync.
+                // => don't ever assign temporary ids. they always need to be
+                //    permanent
+                // => throw an exception to cancel the build and let the user
+                //    know how to fix it!
+                if (BuildPipeline.isBuildingPlayer)
+                    throw new Exception("Scene " + gameObject.scene.path + " needs to be opened and resaved before building, because the scene object " + name + " has no valid sceneId yet.");
+
+                // if we generate the sceneId then we MUST be sure to set dirty
+                // in order to save the scene object properly. otherwise it
+                // would be regenerated every time we reopen the scene, and
+                // upgrading would be very difficult.
+                // -> Undo.RecordObject is the new EditorUtility.SetDirty!
+                // -> we need to call it before changing.
+                Undo.RecordObject(this, "Generated SceneId");
+
+                // generate random sceneId part (0x00000000FFFFFFFF)
+                // -> exclude '0' because that's for unassigned sceneIDs
+                // TODO use 0,uint.max later. Random.Range only has int version.
+                m_SceneId = (uint)UnityEngine.Random.Range(1, int.MaxValue);
+                Debug.Log(name + " in scene=" + gameObject.scene.name + " sceneId assigned to: " + m_SceneId.ToString("X") + (duplicate ? " because duplicated" : ""));
+            }
+
+            // add to sceneIds dict no matter what
+            // -> even if we didn't generate anything new, because we still need
+            //    existing sceneIds in there to check duplicates
+            sceneIds[m_SceneId] = this;
+        }
+
+        // copy scene path hash into sceneId for scene objects.
+        // this is the only way for scene file duplication to not contain
+        // duplicate sceneIds as it seems.
+        // -> sceneId before: 0x00000000AABBCCDD
+        // -> then we clear the left 4 bytes, so that our 'OR' uses 0x00000000
+        // -> then we OR the hash into the 0x00000000 part
+        // -> buildIndex is not enough, because Editor and Build have different
+        //    build indices if there are disabled scenes in build settings, and
+        //    if no scene is in build settings then Editor and Build have
+        //    different indices too (Editor=0, Build=-1)
+        // => ONLY USE THIS FROM POSTPROCESSSCENE!
+        public void SetSceneIdSceneHashPartInternal()
+        {
+            // get deterministic scene hash
+            uint pathHash = (uint)gameObject.scene.path.GetStableHashCode();
+
+            // shift hash from 0x000000FFFFFFFF to 0xFFFFFFFF00000000
+            ulong shiftedHash = (ulong)pathHash << 32;
+
+            // OR into scene id
+            m_SceneId = (m_SceneId & 0xFFFFFFFF) | shiftedHash;
+
+            // log it. this is incredibly useful to debug sceneId issues.
+            Debug.Log(name + " in scene=" + gameObject.scene.name + " scene index hash(" + pathHash.ToString("X") + ") copied into sceneId: " + m_SceneId.ToString("X"));
+        }
+
         void SetupIDs()
         {
             if (ThisIsAPrefab())
             {
-                ForceSceneId(0);
+                m_SceneId = 0; // force 0 for prefabs
                 AssignAssetID(gameObject);
             }
             else if (ThisIsASceneObjectWithPrefabParent(out GameObject prefab))
             {
+                AssignSceneID();
                 AssignAssetID(prefab);
             }
             else if (PrefabStageUtility.GetCurrentPrefabStage() != null)
             {
-                ForceSceneId(0);
+                m_SceneId = 0; // force 0 for prefabs
                 string path = PrefabStageUtility.GetCurrentPrefabStage().prefabAssetPath;
                 AssignAssetID(path);
             }
             else
             {
+                AssignSceneID();
                 m_AssetId = "";
             }
         }
-
 #endif
+
         void OnDestroy()
         {
             if (m_IsServer && NetworkServer.active)
@@ -245,7 +360,7 @@ namespace Mirror
                 }
             }
 
-            if (LogFilter.Debug) { Debug.Log("OnStartServer " + this + " GUID:" + netId); }
+            if (LogFilter.Debug) Debug.Log("OnStartServer " + this + " GUID:" + netId);
 
             // add to spawned (note: the original EnableIsServer isn't needed
             // because we already set m_isServer=true above)
@@ -280,7 +395,7 @@ namespace Mirror
         {
             isClient = true;
 
-            if (LogFilter.Debug) { Debug.Log("OnStartClient " + gameObject + " GUID:" + netId + " localPlayerAuthority:" + localPlayerAuthority); }
+            if (LogFilter.Debug) Debug.Log("OnStartClient " + gameObject + " GUID:" + netId + " localPlayerAuthority:" + localPlayerAuthority);
             foreach (NetworkBehaviour comp in NetworkBehaviours)
             {
                 try
@@ -362,8 +477,6 @@ namespace Mirror
             return true;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         // vis2k: readstring bug prevention: https://issuetracker.unity3d.com/issues/unet-networkwriter-dot-write-causing-readstring-slash-readbytes-out-of-range-errors-in-clients
         // -> OnSerialize writes length,componentData,length,componentData,...
         // -> OnDeserialize carefully extracts each data, then deserializes each component with separate readers
@@ -387,7 +500,7 @@ namespace Mirror
             catch (Exception e)
             {
                 // show a detailed error and let the user know what went wrong
-                Debug.LogError("OnSerialize failed for: object=" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId + "\n\n" + e.ToString());
+                Debug.LogError("OnSerialize failed for: object=" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId.ToString("X") + "\n\n" + e.ToString());
             }
             int endPosition = writer.Position;
 
@@ -396,7 +509,7 @@ namespace Mirror
             writer.Write(endPosition - contentPosition);
             writer.Position = endPosition;
 
-            if (LogFilter.Debug) { Debug.Log("OnSerializeSafely written for object=" + comp.name + " component=" + comp.GetType() + " sceneId=" + m_SceneId + "header@" + headerPosition + " content@" + contentPosition + " end@" + endPosition + " contentSize=" + (endPosition - contentPosition)); }
+            if (LogFilter.Debug) Debug.Log("OnSerializeSafely written for object=" + comp.name + " component=" + comp.GetType() + " sceneId=" + m_SceneId.ToString("X") + "header@" + headerPosition + " content@" + contentPosition + " end@" + endPosition + " contentSize=" + (endPosition - contentPosition));
 
             return result;
         }
@@ -432,7 +545,7 @@ namespace Mirror
                 if (initialState || comp.IsDirty())
                 {
                     // serialize the data
-                    if (LogFilter.Debug) { Debug.Log("OnSerializeAllSafely: " + name + " -> " + comp.GetType() + " initial=" + initialState); }
+                    if (LogFilter.Debug) Debug.Log("OnSerializeAllSafely: " + name + " -> " + comp.GetType() + " initial=" + initialState);
                     OnSerializeSafely(comp, onSerializeWriter, initialState);
 
                     // Clear dirty bits only if we are synchronizing data and not sending a spawn message.
@@ -463,8 +576,6 @@ namespace Mirror
             return dirtyComponentsMask;
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         internal void OnDeserializeSafely(NetworkBehaviour comp, NetworkReader reader, bool initialState)
         {
             // read header as 4 bytes
@@ -472,7 +583,7 @@ namespace Mirror
 
             // read content
             byte[] bytes = reader.ReadBytes(contentSize);
-            if (LogFilter.Debug) { Debug.Log("OnDeserializeSafely extracted: " + comp.name + " component=" + comp.GetType() + " sceneId=" + m_SceneId + " length=" + bytes.Length); }
+            if (LogFilter.Debug) Debug.Log("OnDeserializeSafely extracted: " + comp.name + " component=" + comp.GetType() + " sceneId=" + m_SceneId.ToString("X") + " length=" + bytes.Length);
 
             // call OnDeserialize with a temporary reader, so that the
             // original one can't be messed with. we also wrap it in a
@@ -484,13 +595,13 @@ namespace Mirror
                 comp.OnDeserialize(componentReader, initialState);
                 if (componentReader.Position != componentReader.Length)
                 {
-                    Debug.LogWarning("OnDeserialize didn't read the full " + bytes.Length + " bytes for object:" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId + ". Make sure that OnSerialize and OnDeserialize write/read the same amount of data in all cases.");
+                    Debug.LogWarning("OnDeserialize didn't read the full " + bytes.Length + " bytes for object:" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId.ToString("X") + ". Make sure that OnSerialize and OnDeserialize write/read the same amount of data in all cases.");
                 }
             }
             catch (Exception e)
             {
                 // show a detailed error and let the user know what went wrong
-                Debug.LogError("OnDeserialize failed for: object=" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId + " length=" + bytes.Length + ". Possible Reasons:\n  * Do " + comp.GetType() + "'s OnSerialize and OnDeserialize calls write the same amount of data(" + bytes.Length +" bytes)? \n  * Was there an exception in " + comp.GetType() + "'s OnSerialize/OnDeserialize code?\n  * Are the server and client the exact same project?\n  * Maybe this OnDeserialize call was meant for another GameObject? The sceneIds can easily get out of sync if the Hierarchy was modified only in the client OR the server. Try rebuilding both.\n\n" + e.ToString());
+                Debug.LogError("OnDeserialize failed for: object=" + name + " component=" + comp.GetType() + " sceneId=" + m_SceneId.ToString("X") + " length=" + bytes.Length + ". Possible Reasons:\n  * Do " + comp.GetType() + "'s OnSerialize and OnDeserialize calls write the same amount of data(" + bytes.Length +" bytes)? \n  * Was there an exception in " + comp.GetType() + "'s OnSerialize/OnDeserialize code?\n  * Are the server and client the exact same project?\n  * Maybe this OnDeserialize call was meant for another GameObject? The sceneIds can easily get out of sync if the Hierarchy was modified only in the client OR the server. Try rebuilding both.\n\n" + e.ToString());
             }
         }
 
@@ -511,8 +622,6 @@ namespace Mirror
             }
         }
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         // happens on client
         internal void HandleClientAuthority(bool authority)
         {
@@ -526,7 +635,7 @@ namespace Mirror
         }
 
         // helper function to handle SyncEvent/Command/Rpc
-        internal void HandleRemoteCall(int componentIndex, int functionHash, UNetInvokeType invokeType, NetworkReader reader)
+        internal void HandleRemoteCall(int componentIndex, int functionHash, MirrorInvokeType invokeType, NetworkReader reader)
         {
             if (gameObject == null)
             {
@@ -552,19 +661,19 @@ namespace Mirror
         // happens on client
         internal void HandleSyncEvent(int componentIndex, int eventHash, NetworkReader reader)
         {
-            HandleRemoteCall(componentIndex, eventHash, UNetInvokeType.SyncEvent, reader);
+            HandleRemoteCall(componentIndex, eventHash, MirrorInvokeType.SyncEvent, reader);
         }
 
         // happens on server
         internal void HandleCommand(int componentIndex, int cmdHash, NetworkReader reader)
         {
-            HandleRemoteCall(componentIndex, cmdHash, UNetInvokeType.Command, reader);
+            HandleRemoteCall(componentIndex, cmdHash, MirrorInvokeType.Command, reader);
         }
 
         // happens on client
         internal void HandleRPC(int componentIndex, int rpcHash, NetworkReader reader)
         {
-            HandleRemoteCall(componentIndex, rpcHash, UNetInvokeType.ClientRpc, reader);
+            HandleRemoteCall(componentIndex, rpcHash, MirrorInvokeType.ClientRpc, reader);
         }
 
         internal void OnUpdateVars(NetworkReader reader, bool initialState)
@@ -639,7 +748,7 @@ namespace Mirror
                 return;
             }
 
-            if (LogFilter.Debug) { Debug.Log("Added observer " + conn.address + " added for " + gameObject); }
+            if (LogFilter.Debug) Debug.Log("Added observer " + conn.address + " added for " + gameObject);
 
             observers[conn.connectionId] = conn;
             conn.AddToVisList(this);
@@ -706,7 +815,7 @@ namespace Mirror
                 {
                     // new observer
                     conn.AddToVisList(this);
-                    if (LogFilter.Debug) { Debug.Log("New Observer for " + gameObject + " " + conn); }
+                    if (LogFilter.Debug) Debug.Log("New Observer for " + gameObject + " " + conn);
                     changed = true;
                 }
             }
@@ -717,7 +826,7 @@ namespace Mirror
                 {
                     // removed observer
                     conn.RemoveFromVisList(this, false);
-                    if (LogFilter.Debug) { Debug.Log("Removed Observer for " + gameObject + " " + conn); }
+                    if (LogFilter.Debug) Debug.Log("Removed Observer for " + gameObject + " " + conn);
                     changed = true;
                 }
             }
@@ -775,7 +884,7 @@ namespace Mirror
                 netId = netId,
                 authority = false
             };
-            conn.Send((short)MsgType.LocalClientAuthority, msg);
+            conn.Send(msg);
 
             clientAuthorityCallback?.Invoke(conn, this, false);
             return true;
@@ -818,7 +927,7 @@ namespace Mirror
                 netId = netId,
                 authority = true
             };
-            conn.Send((short)MsgType.LocalClientAuthority, msg);
+            conn.Send(msg);
 
             clientAuthorityCallback?.Invoke(conn, this, true);
             return true;
@@ -870,7 +979,7 @@ namespace Mirror
                 // populate cached UpdateVarsMessage and send
                 varsMessage.netId = netId;
                 varsMessage.payload = payload;
-                NetworkServer.SendToReady(this, (short)MsgType.UpdateVars, varsMessage);
+                NetworkServer.SendToReady(this, varsMessage);
             }
         }
     }

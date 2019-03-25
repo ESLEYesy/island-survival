@@ -307,9 +307,6 @@
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
  </Reference>
- <Reference Include="Mirror.Weaver">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Mirror.Weaver.dll</HintPath>
- </Reference>
  <Reference Include="Unity.Cecil">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.dll</HintPath>
  </Reference>
@@ -695,6 +692,8 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{AC531D45-63C0-B102-B068-0D1BA5F54148}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
+    <ProjectReference Include="Mirror.Weaver.csproj">
+      <Project>{5530F577-E6DE-8E7B-EE77-31C8E14DEB4F}</Project>      <Name>Mirror.Weaver</Name>    </ProjectReference>
     <ProjectReference Include="Mirror.csproj">
       <Project>{8C63649F-C4DE-DA08-3840-002C6BB5CD56}</Project>      <Name>Mirror</Name>    </ProjectReference>
   </ItemGroup>

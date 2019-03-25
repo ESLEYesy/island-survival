@@ -55,6 +55,7 @@
   <ItemGroup>
      <Compile Include="Assets\Mirror\Tests\ExponentialMovingAverageTest.cs" />
      <Compile Include="Assets\Mirror\Tests\FloatBytePackerTest.cs" />
+     <Compile Include="Assets\Mirror\Tests\MessagePackerTest.cs" />
      <Compile Include="Assets\Mirror\Tests\NetworkWriterTest.cs" />
      <Compile Include="Assets\Mirror\Tests\SyncListTest.cs" />
      <Compile Include="Assets\Mirror\Tests\WeaverAssembler.cs" />
@@ -289,9 +290,6 @@
  </Reference>
  <Reference Include="UnityEditor.OSXStandalone.Extensions">
  <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
- </Reference>
- <Reference Include="Mirror.Weaver">
- <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Mirror.Weaver.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Cecil">
  <HintPath>/Users/michaelwilliams/island-survival/Island Survival/Assets/Mirror/Plugins/Unity.Cecil/Unity.Cecil.dll</HintPath>
@@ -678,6 +676,8 @@
   <ItemGroup>
     <ProjectReference Include="Mirror.csproj">
       <Project>{8C63649F-C4DE-DA08-3840-002C6BB5CD56}</Project>      <Name>Mirror</Name>    </ProjectReference>
+    <ProjectReference Include="Mirror.Weaver.csproj">
+      <Project>{5530F577-E6DE-8E7B-EE77-31C8E14DEB4F}</Project>      <Name>Mirror.Weaver</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
