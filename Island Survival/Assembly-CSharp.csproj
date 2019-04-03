@@ -70,6 +70,7 @@
      <Compile Include="Assets\Mirror\Examples\Movement\Scripts\Move.cs" />
      <Compile Include="Assets\Mirror\Examples\Pong\Scripts\Ball.cs" />
      <Compile Include="Assets\Mirror\Examples\Pong\Scripts\Player.cs" />
+     <Compile Include="Assets\Scripts\Menu.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark01_UGUI.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
