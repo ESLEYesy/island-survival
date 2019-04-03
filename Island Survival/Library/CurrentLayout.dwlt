@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_PixelRect:
     serializedVersion: 2
-    x: 1944
+    x: 1921
     y: 22
     width: 1920
     height: 971
@@ -44,10 +44,10 @@ MonoBehaviour:
     y: 30
     width: 1920
     height: 921
-  m_MinSize: {x: 883, y: 498}
+  m_MinSize: {x: 683, y: 498}
   m_MaxSize: {x: 14004, y: 14048}
   vertical: 0
-  controlID: 89
+  controlID: 24
 --- !u!114 &3
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -150,7 +150,7 @@ MonoBehaviour:
     y: 0
     width: 1920
     height: 971
-  m_MinSize: {x: 950, y: 548}
+  m_MinSize: {x: 950, y: 300}
   m_MaxSize: {x: 10000, y: 10000}
 --- !u!114 &7
 MonoBehaviour:
@@ -216,10 +216,10 @@ MonoBehaviour:
     y: 0
     width: 1640
     height: 921
-  m_MinSize: {x: 606, y: 498}
+  m_MinSize: {x: 406, y: 498}
   m_MaxSize: {x: 10002, y: 14048}
   vertical: 1
-  controlID: 90
+  controlID: 25
 --- !u!114 &10
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -241,10 +241,10 @@ MonoBehaviour:
     y: 0
     width: 1640
     height: 647
-  m_MinSize: {x: 606, y: 224}
-  m_MaxSize: {x: 6054, y: 4024}
+  m_MinSize: {x: 406, y: 224}
+  m_MaxSize: {x: 8006, y: 4024}
   vertical: 0
-  controlID: 91
+  controlID: 73
 --- !u!114 &11
 MonoBehaviour:
   m_ObjectHideFlags: 52
@@ -264,14 +264,14 @@ MonoBehaviour:
     y: 0
     width: 1336
     height: 647
-  m_MinSize: {x: 404, y: 124}
-  m_MaxSize: {x: 2052, y: 2072}
-  m_ActualView: {fileID: 13}
+  m_MinSize: {x: 204, y: 224}
+  m_MaxSize: {x: 4004, y: 4024}
+  m_ActualView: {fileID: 18}
   m_Panes:
   - {fileID: 13}
   - {fileID: 18}
   - {fileID: 17}
-  m_Selected: 0
+  m_Selected: 1
   m_LastSelected: 2
 --- !u!114 &12
 MonoBehaviour:
@@ -325,7 +325,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 2248
+    x: 2225
     y: 52
     width: 1332
     height: 627
@@ -351,7 +351,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1944
+    x: 1921
     y: 699
     width: 1638
     height: 254
@@ -368,20 +368,20 @@ MonoBehaviour:
     m_ShowAllHits: 0
     m_SearchArea: 1
     m_Folders:
-    - Assets
+    - Assets/Scenes
   m_ViewMode: 1
   m_StartGridSize: 64
   m_LastFolders:
-  - Assets/MegaPack1Lite
+  - Assets/Scenes
   m_LastFoldersGridSize: -1
   m_LastProjectPath: /Users/michaelwilliams/island-survival/Island Survival
   m_LockTracker:
     m_IsLocked: 0
   m_FolderTreeState:
-    scrollPos: {x: 0, y: 10.013245}
-    m_SelectedIDs: 7e0b0000
-    m_LastClickedID: 2942
-    m_ExpandedIDs: 000000007e0b0000ce0d0000900f000038110000d614000000ca9a3bffffff7f
+    scrollPos: {x: 0, y: 0}
+    m_SelectedIDs: a20d0000
+    m_LastClickedID: 3490
+    m_ExpandedIDs: 000000007e0b0000c80d00007c0f000036110000e214000000ca9a3b
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -409,7 +409,7 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
-    m_ExpandedIDs: 000000007e0b0000ce0d0000900f000038110000d6140000
+    m_ExpandedIDs: 000000007e0b0000c80d00007c0f000036110000e2140000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -436,7 +436,7 @@ MonoBehaviour:
   m_ListAreaState:
     m_SelectedInstanceIDs: 
     m_LastClickedInstanceID: 0
-    m_HadKeyboardFocusLastEvent: 0
+    m_HadKeyboardFocusLastEvent: 1
     m_ExpandedInstanceIDs: c623000000000000
     m_RenameOverlay:
       m_UserAcceptedRename: 0
@@ -485,7 +485,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 3584
+    x: 3561
     y: 52
     width: 278
     height: 901
@@ -520,7 +520,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 1944
+    x: 1921
     y: 52
     width: 302
     height: 627
@@ -530,7 +530,7 @@ MonoBehaviour:
       scrollPos: {x: 0, y: 0}
       m_SelectedIDs: 
       m_LastClickedID: 0
-      m_ExpandedIDs: 0440ffff2e40ffff3e43ffff2444ffffb444ffffb644ffff7045ffff2446ffffd4fbffff
+      m_ExpandedIDs: 8646ffffb046ffffd4fbffff
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -574,7 +574,7 @@ MonoBehaviour:
     m_Tooltip: 
   m_Pos:
     serializedVersion: 2
-    x: 2248
+    x: 2225
     y: 52
     width: 1332
     height: 627
@@ -655,7 +655,7 @@ MonoBehaviour:
   m_Pos:
     serializedVersion: 2
     x: 2225
-    y: 62
+    y: 52
     width: 1332
     height: 627
   m_PersistentViewDataDictionary: {fileID: 0}
@@ -681,7 +681,7 @@ MonoBehaviour:
     m_HSlider: 0
     m_VSlider: 0
     m_IgnoreScrollWheelUntilClicked: 0
-    m_EnableMouseInput: 0
+    m_EnableMouseInput: 1
     m_EnableSliderZoomHorizontal: 0
     m_EnableSliderZoomVertical: 0
     m_UniformScale: 1
