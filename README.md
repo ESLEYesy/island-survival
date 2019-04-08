@@ -1,3 +1,5 @@
+[![License:
+MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 # Island Survival
 Party style multiplayer game where players find themselves stranded on an island. Created with Unity and C#
 
