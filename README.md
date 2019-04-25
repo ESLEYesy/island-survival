@@ -23,10 +23,11 @@ Party style multiplayer game where players find themselves stranded on an island
 - [ ] Create multiplayer lobby UI
 - [ ] Create island terrain for a small starter map
 - [x] Create player with basic motion
+- [ ] Add name above player
 
 ## Bugs
 - [ ] Non local player animations not working
-- [ ] Camera does not follow local player
+- [x] Camera does not follow local player
 
 ## References
 * Mirror
