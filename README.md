@@ -26,8 +26,9 @@ Party style multiplayer game where players find themselves stranded on an island
 - [ ] Add name above player
 
 ## Bugs
-- [ ] Non local player animations not working
+- [x] Non local player animations not working
 - [x] Camera does not follow local player
+- [ ] Players can't move backwards (glitchy)
 
 ## References
 * Mirror

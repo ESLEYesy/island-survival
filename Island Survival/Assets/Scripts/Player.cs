@@ -21,6 +21,8 @@ public class Player : NetworkBehaviour
 						Camera.main.transform.LookAt(this.transform.position);
 						Camera.main.transform.parent = this.transform;
 				}
+
+				GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
     }
 
     // Update is called once per frame
