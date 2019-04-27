@@ -9,19 +9,19 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1010362148908480}
+  m_RootGameObject: {fileID: 1301704514817616}
   m_IsPrefabParent: 1
---- !u!1 &1010362148908480
+--- !u!1 &1301704514817616
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4096264977327404}
-  - component: {fileID: 33081888904340792}
-  - component: {fileID: 23437400160872700}
-  - component: {fileID: 64877327313114462}
+  - component: {fileID: 4122383060551346}
+  - component: {fileID: 33415938882019712}
+  - component: {fileID: 23448431209782704}
+  - component: {fileID: 64655098250870350}
   m_Layer: 0
   m_Name: enchantedforest_tree_fallen_small
   m_TagString: Untagged
@@ -29,25 +29,25 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4096264977327404
+--- !u!4 &4122383060551346
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1010362148908480}
-  m_LocalRotation: {x: -0.00000046845568, y: 0.9659248, z: -0.0000017483226, w: 0.25882307}
-  m_LocalPosition: {x: 2.74, y: -0, z: -27.94}
+  m_GameObject: {fileID: 1301704514817616}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: -210, z: 0}
---- !u!23 &23437400160872700
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!23 &23448431209782704
 MeshRenderer:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1010362148908480}
+  m_GameObject: {fileID: 1301704514817616}
   m_Enabled: 1
   m_CastShadows: 1
   m_ReceiveShadows: 1
@@ -55,7 +55,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 67c9eb558e06e487bb1f6cb6ca85a081, type: 2}
+  - {fileID: 2100000, guid: af9064b4a535f46c2a620ef66f7d9361, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -74,19 +74,19 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!33 &33081888904340792
+--- !u!33 &33415938882019712
 MeshFilter:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1010362148908480}
-  m_Mesh: {fileID: 4300000, guid: e827c7a2577ac49dbb5a4e1fa1933d98, type: 3}
---- !u!64 &64877327313114462
+  m_GameObject: {fileID: 1301704514817616}
+  m_Mesh: {fileID: 4300000, guid: 8bc1df3da92f140349076917848a720f, type: 3}
+--- !u!64 &64655098250870350
 MeshCollider:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1010362148908480}
+  m_GameObject: {fileID: 1301704514817616}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
@@ -94,4 +94,4 @@ MeshCollider:
   m_Convex: 0
   m_InflateMesh: 0
   m_SkinWidth: 0.01
-  m_Mesh: {fileID: 4300000, guid: e827c7a2577ac49dbb5a4e1fa1933d98, type: 3}
+  m_Mesh: {fileID: 4300000, guid: 8bc1df3da92f140349076917848a720f, type: 3}
