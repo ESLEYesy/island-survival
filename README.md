@@ -30,7 +30,8 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Camera does not follow local player
 - [ ] Players can't move backwards (glitchy)
 
-## References
-* Mirror
-* Low Poly Megapack
+## Credits
+* [Mirror](https://assetstore.unity.com/packages/tools/network/mirror-129321)
+* [Low Poly Megapack Lite](https://assetstore.unity.com/packages/3d/environments/low-poly-megapack-lite-136629)
 * Unity Standard Assets
+* [Holostic 3D](https://www.youtube.com/channel/UCp_SOgsRYdLfIEWLjM62ZJg)
