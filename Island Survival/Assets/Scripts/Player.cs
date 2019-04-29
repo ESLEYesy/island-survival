@@ -11,13 +11,16 @@ public class Player : NetworkBehaviour
 	[SerializeField] ToggleEvent onToggleLocal;
 	[SerializeField] ToggleEvent onToggleRemote;
 
+	[SyncVar]
+	public string chatBox = "Enter message...";
+
     // Start is called before the first frame update
     void Start()
     {
         EnablePlayer();
 				if (isLocalPlayer)
 				{
-						Camera.main.transform.position = this.transform.position - this.transform.forward*10 + this.transform.up*3;
+						Camera.main.transform.position = this.transform.position - this.transform.forward*5 + this.transform.up*5;
 						Camera.main.transform.LookAt(this.transform.position);
 						Camera.main.transform.parent = this.transform;
 				}
@@ -60,4 +63,12 @@ public class Player : NetworkBehaviour
     		onToggleRemote.Invoke(true);
     	}
     }
+
+		void OnGUI()
+		{
+			if (isLocalPlayer)
+			{
+				chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 100, 30), chatBox);
+			}
+		}
 }
