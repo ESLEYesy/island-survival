@@ -21,7 +21,7 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Create menu
 - [x] Add networking for multiplayer
 - [ ] Create multiplayer lobby UI
-- [ ] Create island terrain for a small starter map
+- [x] Create island terrain for a small starter map
 - [x] Create player with basic motion
 - [ ] Add name above player
 
