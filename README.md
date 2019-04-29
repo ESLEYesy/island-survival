@@ -24,6 +24,9 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Create island terrain for a small starter map
 - [x] Create player with basic motion
 - [ ] Add name above player
+- [ ] Implement chat
+- [ ] Add inventory to player
+- [ ] Create pause menu
 
 ## Bugs
 - [x] Non local player animations not working
