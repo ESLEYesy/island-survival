@@ -68,7 +68,11 @@ public class Player : NetworkBehaviour
 		{
 			if (isLocalPlayer)
 			{
-				chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 100, 30), chatBox);
+				chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
+				if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
+				{
+
+				}
 			}
 		}
 }

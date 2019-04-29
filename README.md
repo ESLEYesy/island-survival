@@ -31,7 +31,7 @@ Party style multiplayer game where players find themselves stranded on an island
 ## Bugs
 - [x] Non local player animations not working
 - [x] Camera does not follow local player
-- [ ] Players can't move backwards (glitchy)
+- [x] Players can't move backwards (glitchy)
 
 ## Credits
 * [Mirror](https://assetstore.unity.com/packages/tools/network/mirror-129321)
