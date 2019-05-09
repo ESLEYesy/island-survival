@@ -27,6 +27,7 @@ Party style multiplayer game where players find themselves stranded on an island
 - [ ] Implement chat
 - [ ] Add inventory to player
 - [ ] Create pause menu
+- [x] Add day/night cycle
 
 ## Bugs
 - [x] Non local player animations not working
