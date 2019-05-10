@@ -17,17 +17,25 @@ Party style multiplayer game where players find themselves stranded on an island
 * mwilliams-dev
 * dstevens-dev
 
-## Tasking
+## Networking tasks
 - [x] Create menu
 - [x] Add networking for multiplayer
 - [ ] Create multiplayer lobby UI
-- [x] Create island terrain for a small starter map
-- [x] Create player with basic motion
 - [ ] Add name above player
 - [ ] Implement chat
-- [ ] Add inventory to player
-- [ ] Create pause menu
-- [x] Add day/night cycle
+
+## Environment tasks
+- [x] Create island terrain for a small start map
+- [ ] Add sand layer underwater
+- [ ] Add day/night cycle
+- [ ] Add trees, rocks, wood, etc.
+
+## Player tasks
+- [x] Create player with basic motion
+- [ ] Add swimming animations
+- [ ] Add fighting animations
+- [ ] Create player inventory
+- [ ] Create pause/settings menu
 
 ## Bugs
 - [x] Non local player animations not working
