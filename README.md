@@ -27,7 +27,7 @@ Party style multiplayer game where players find themselves stranded on an island
 ## Environment tasks
 - [x] Create island terrain for a small start map
 - [ ] Add sand layer underwater
-- [ ] Add day/night cycle
+- [x] Add day/night cycle
 - [ ] Add trees, rocks, wood, etc.
 
 ## Player tasks
@@ -41,6 +41,7 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Non local player animations not working
 - [x] Camera does not follow local player
 - [x] Players can't move backwards (glitchy)
+- [ ] Weird lights bouncing back and forth on lower sand layer
 
 ## Credits
 * [Mirror](https://assetstore.unity.com/packages/tools/network/mirror-129321)
