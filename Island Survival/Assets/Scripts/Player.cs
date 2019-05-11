@@ -14,15 +14,18 @@ public class Player : NetworkBehaviour
 	[SyncVar]
 	public string chatBox = "Enter message...";
 
+    Vector3 camDiff;
+
     // Start is called before the first frame update
     void Start()
     {
         EnablePlayer();
 				if (isLocalPlayer)
 				{
-					Camera.main.transform.position = this.transform.position - this.transform.forward*8 + this.transform.up*3;
+					Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6;
 					Camera.main.transform.LookAt(this.transform.position);
-					Camera.main.transform.parent = this.transform;
+                    camDiff = Camera.main.transform.position - this.transform.position;
+					//Camera.main.transform.parent = this.transform;
 				}
 
 				//GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
@@ -32,6 +35,12 @@ public class Player : NetworkBehaviour
     void Update()
     {
 
+    }
+
+    private void FixedUpdate()
+    {
+        //CAMERA FOLLOW
+        Camera.main.transform.position = this.transform.position + camDiff;
     }
 
     void DisablePlayer()
