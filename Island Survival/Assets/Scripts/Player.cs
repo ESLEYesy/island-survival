@@ -17,15 +17,17 @@ public class Player : NetworkBehaviour
 
 
     private Queue<Item> inventory  = new Queue<Item>();
+    private Item equipped;
 
     Vector3 camDiff;
     public GameObject itemContainerPrefab;
-    public GameObject interactionRadius;
     public GameObject textMeshPrefab;
+    public GameObject interactionRadius;
+    public PlayerInteraction interaction;
 
     private GameObject interactLabel;
 
-    public float throwForce = 10.0f;
+    public float throwForce = 15.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -42,69 +44,99 @@ public class Player : NetworkBehaviour
         //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
         interactLabel = Instantiate(textMeshPrefab);
+        interaction = interactionRadius.GetComponent<PlayerInteraction>();
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    int itemTest = 0;
-    private void FixedUpdate()
-    {
         //CAMERA FOLLOW
         Camera.main.transform.position = this.transform.position + camDiff;
 
-        //drop item test
-        if (Input.GetKeyDown("x"))
+        //spawn item - K (axe)
+        if (Input.GetKeyDown("k"))
         {
-            GameObject newItem = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward*1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
+            GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
+            Item newItem = spawnContainer.AddComponent(typeof(Axe)) as Axe;
+            Debug.Log("Spawned a " + newItem.getName() + " " + newItem.getTitle() + ".");
 
-            Item itemController = newItem.GetComponent<Item>();
-            itemController.setName("TestItem #" + itemTest);
-
-            newItem.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-
-            Debug.Log("TestItem #" + itemTest + " created.");
-            itemTest++;
-
+            spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
+            spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
         }
 
-        GameObject closestObject = interactionRadius.GetComponent<PlayerInteraction>().closest;
-
-        //pick up item test
-        if (Input.GetKeyDown("j"))
+        //drop item - X
+        if (equipped != null && Input.GetKeyDown("x"))
         {
-            if(closestObject == null)
+            GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
+            Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
+            Debug.Log("Dropped a " + equipped.getName() + ".");
+            equipped = null;
+
+            spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
+            spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+        }
+
+        //use item - MOUSE1
+        if (equipped != null && Input.GetMouseButtonDown(0))
+        {
+            equipped.UseItem(this);
+        }
+
+        //interact item - E
+        GameObject closestObject = interaction.closest;
+        if (Input.GetKeyDown("e"))
+        {
+            if (closestObject == null) // nothing to interact with
             {
                 Debug.Log("There is no item in interacting distance");
 
-            } else
-            {
-                Debug.Log("Interacted with '" + closestObject.GetComponent<Item>().getName() + "' !");
-                interactionRadius.GetComponent<PlayerInteraction>().RemoveObject(closestObject);
-                Destroy(closestObject);
             }
+            else // something to interact with!
+            {
+                Item pickup = closestObject.GetComponent<Item>();
+                if (pickup != null) // interactable is an item
+                {
 
+                    if (equipped == null) // pick up the item
+                    {
+                        equipped = pickup;
+                        Debug.Log("Picked up '" + pickup.getName() + "'!");
+                        interaction.DestroyObject(closestObject);
+                        //Destroy(closestObject);
+                    }
+                    else // already have an item - do nothing
+                    {
+                        Debug.Log("Cannot pick up '" + pickup.getName() + "' - you already have an item.");
+                        closestObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 4f), Random.Range(0f, 1f)));
+                        closestObject.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+                    }
+
+                }
+                else //interactable is not an item
+                {
+                    Debug.Log("Interacted with '" + closestObject.GetComponent<Item>().getName() + "' !");
+                    //interaction.DestroyObject(closestObject);
+                }
+            }
         }
-
-        
-        //label test
+        //update closest interactable label
         if (closestObject != null)
         {
             interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);
             interactLabel.transform.rotation = Camera.main.transform.rotation;
             interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Item>().getName();
 
-        } else
+        }
+        else
         {
             interactLabel.GetComponent<TextMesh>().text = "";
         }
-        
-        
 
-
+    }
+    
+    private void FixedUpdate()
+    {
+        
     }
 
     void DisablePlayer()

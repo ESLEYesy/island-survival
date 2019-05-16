@@ -11,7 +11,7 @@ public class PlayerInteraction : MonoBehaviour
 
     public GameObject closest;
 
-    public void FixedUpdate()
+    public void Update()
     {
         closest = closestObject();
     }
@@ -44,9 +44,15 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
-    public void RemoveObject(GameObject rem)
+    public void RemoveObject(GameObject toRemove)
     {
-        interactable.Remove(rem);
+        interactable.Remove(toRemove);
+    }
+
+    public void DestroyObject(GameObject toDestroy)
+    {
+        RemoveObject(toDestroy);
+        Destroy(toDestroy);
     }
 
     public bool HasInteractableObjects()
@@ -60,10 +66,10 @@ public class PlayerInteraction : MonoBehaviour
         {
             interactable.Add(other.gameObject);
 
-            Item test = other.gameObject.GetComponent<Item>();
-            if(test != null)
+            Interactable i = other.gameObject.GetComponent<Interactable>();
+            if(i != null)
             {
-                Debug.Log("Item '" + test.getName() + "' is within interacting range!");
+                Debug.Log(i.getTitle() + " '" + i.getName() + "' is within interacting range.");
             }
         }
     }
@@ -79,10 +85,10 @@ public class PlayerInteraction : MonoBehaviour
                 Debug.Log("Error! We have lost interaction with an object we never were able to interact with");
             }
 
-            Item test = other.gameObject.GetComponent<Item>();
-            if (test != null)
+            InteractableWrapper i = other.gameObject.GetComponent<InteractableWrapper>();
+            if (i != null)
             {
-                Debug.Log("Item '" + test.getName() + "' is no longer within interacting range!");
+                Debug.Log(i.i.getTitle() + " '" + i.i.getName() + "' is no longer within interacting range.");
                 other.GetComponent<MeshRenderer>().material = noOutline;
             }
         }
