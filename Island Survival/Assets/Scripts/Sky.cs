@@ -72,7 +72,7 @@ public class Sky : MonoBehaviour {
           transform.Rotate (nightRotateSpeed * Time.deltaTime * skySpeed);
         }
 
-        if (Input.GetKeyDown (KeyCode.Q)) skySpeed *= 0.5f;
-        if (Input.GetKeyDown (KeyCode.E)) skySpeed *= 2f;
+        //if (Input.GetKeyDown (KeyCode.Q)) skySpeed *= 0.5f;
+        //if (Input.GetKeyDown (KeyCode.E)) skySpeed *= 2f;
     }
 }

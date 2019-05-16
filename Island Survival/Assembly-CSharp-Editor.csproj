@@ -60,6 +60,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\CrossPlatformInput\CrossPlatformInputInitialize.cs" />
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\Water\Water4\GerstnerDisplaceEditor.cs" />
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\Water\Water4\PlanarReflectionEditor.cs" />
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\Water\Water4\SpecularLightingEditor.cs" />
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\Water\Water4\WaterBaseEditor.cs" />
+    <Compile Include="Assets\AssetStore\Standard Assets\Editor\Water\Water4\WaterEditorUtility.cs" />
     <Compile Include="Assets\Mirror\Editor\NetworkAnimatorEditor.cs" />
     <Compile Include="Assets\Mirror\Editor\NetworkBehaviourInspector.cs" />
     <Compile Include="Assets\Mirror\Editor\NetworkIdentityEditor.cs" />
@@ -712,17 +718,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
-      <Project>{B7D1AAE1-2093-C318-199B-84A911A0FB03}</Project>
-      <Name>Assembly-CSharp-firstpass</Name>
-    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{AC531D45-63C0-B102-B068-0D1BA5F54148}</Project>
       <Name>Assembly-CSharp</Name>
-    </ProjectReference>
-    <ProjectReference Include="Assembly-CSharp-Editor-firstpass.csproj">
-      <Project>{5760CDD8-0624-C3CF-AA2B-D5D05A6037BE}</Project>
-      <Name>Assembly-CSharp-Editor-firstpass</Name>
     </ProjectReference>
     <ProjectReference Include="Mirror.Weaver.csproj">
       <Project>{5530F577-E6DE-8E7B-EE77-31C8E14DEB4F}</Project>

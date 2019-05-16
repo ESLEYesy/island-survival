@@ -1888,9 +1888,10 @@ MonoBehaviour:
   chatBox: Enter message...
   itemContainerPrefab: {fileID: 1507252404410314503, guid: 8bac596e61af5f64c93c5368b410ac0d,
     type: 3}
-  interactionRadius: {fileID: 3817050849830389854}
   textMeshPrefab: {fileID: 1972066348266862950, guid: dae8d855f67dde349b16f4905c43372d,
     type: 3}
+  interactionRadius: {fileID: 3817050849830389854}
+  interaction: {fileID: 0}
   throwForce: 10
 --- !u!114 &4335411156162426100
 MonoBehaviour:
