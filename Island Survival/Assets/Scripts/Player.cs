@@ -101,6 +101,7 @@ public class Player : NetworkBehaviour
                     {
                         equipped = pickup;
                         Debug.Log("Picked up '" + pickup.Name + "'!");
+                        //closestObject
                         //interaction.DestroyObject(closestObject);
                         //Destroy(closestObject);
                     }

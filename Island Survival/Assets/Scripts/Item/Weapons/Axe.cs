@@ -13,7 +13,7 @@ public class Axe : Weapon
     public override bool UseItem(Player user)
     {
         Debug.Log("Axe swung!");
-        Instantiate();
+        //Instantiate();
         return true;
     }
 
