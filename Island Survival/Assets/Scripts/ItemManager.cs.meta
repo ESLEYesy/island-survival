@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: 8ee22e36cba37ad46b0238e45874e7ab
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - axe: {fileID: 8509007461121581588, guid: 1c37f3e80094c9949b17e09665bb4d23, type: 3}
+  - axehitbox: {fileID: 3276517948493478656, guid: 1e1bf49f8581e024aa4579ddefccfc05,
+      type: 3}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

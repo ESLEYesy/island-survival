@@ -5,11 +5,17 @@ using UnityEngine;
 public class Item : Interactable
 {
 
-    public readonly new string name = "Null_Item";
-    public readonly new string title = "Item";
+    private GameObject itemManager;
 
-    public bool UseItem(Player user)
+    public Item()
     {
+        Title = "Item";
+        Name = "Null_Item";
+    }
+
+    public virtual bool UseItem(Player user)
+    {
+        Debug.Log("Attempted to use Null_Item");
         return false;
     }
 

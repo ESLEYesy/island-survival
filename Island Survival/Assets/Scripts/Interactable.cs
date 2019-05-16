@@ -5,17 +5,13 @@ using UnityEngine;
 public class Interactable : MonoBehaviour
 {
 
-    public readonly new string name = "Null_Interactable";
-    public readonly string title = "Interactable";
+    public string Name { get; set; }
+    public string Title { get; set; }
 
-    public string getTitle()
+    public Interactable()
     {
-        return title;
-    }
-
-    public string getName()
-    {
-        return name;
+        Title = "Interactable";
+        Name = "Null_Interactable";
     }
 
 }

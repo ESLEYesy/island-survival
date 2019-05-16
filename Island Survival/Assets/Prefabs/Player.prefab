@@ -1892,7 +1892,7 @@ MonoBehaviour:
     type: 3}
   interactionRadius: {fileID: 3817050849830389854}
   interaction: {fileID: 0}
-  throwForce: 10
+  throwForce: 15
 --- !u!114 &4335411156162426100
 MonoBehaviour:
   m_ObjectHideFlags: 0

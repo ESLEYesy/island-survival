@@ -4,7 +4,15 @@ using UnityEngine;
 
 public class Weapon : Item
 {
+    public Weapon() : base()
+    {
+        Name = "Null_Weapon";
+    }
 
-    public readonly new string name = "Null_Weapon";
-    
+    public override bool UseItem(Player user)
+    {
+        Debug.Log("Attempted to use Null_Weapon");
+        return false;
+    }
+
 }

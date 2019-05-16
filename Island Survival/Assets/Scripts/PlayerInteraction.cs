@@ -69,7 +69,7 @@ public class PlayerInteraction : MonoBehaviour
             Interactable i = other.gameObject.GetComponent<Interactable>();
             if(i != null)
             {
-                Debug.Log(i.getTitle() + " '" + i.getName() + "' is within interacting range.");
+                Debug.Log(i.Title + " '" + i.Name + "' is within interacting range.");
             }
         }
     }
@@ -85,10 +85,10 @@ public class PlayerInteraction : MonoBehaviour
                 Debug.Log("Error! We have lost interaction with an object we never were able to interact with");
             }
 
-            InteractableWrapper i = other.gameObject.GetComponent<InteractableWrapper>();
+            Interactable i = other.gameObject.GetComponent<Interactable>();
             if (i != null)
             {
-                Debug.Log(i.i.getTitle() + " '" + i.i.getName() + "' is no longer within interacting range.");
+                Debug.Log(i.Title + " '" + i.Name + "' is no longer within interacting range.");
                 other.GetComponent<MeshRenderer>().material = noOutline;
             }
         }

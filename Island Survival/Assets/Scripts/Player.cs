@@ -17,13 +17,13 @@ public class Player : NetworkBehaviour
 
 
     private Queue<Item> inventory  = new Queue<Item>();
-    private Item equipped;
+    public Item equipped;
 
     Vector3 camDiff;
     public GameObject itemContainerPrefab;
     public GameObject textMeshPrefab;
     public GameObject interactionRadius;
-    public PlayerInteraction interaction;
+    private PlayerInteraction interaction;
 
     private GameObject interactLabel;
 
@@ -57,8 +57,8 @@ public class Player : NetworkBehaviour
         if (Input.GetKeyDown("k"))
         {
             GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
-            Item newItem = spawnContainer.AddComponent(typeof(Axe)) as Axe;
-            Debug.Log("Spawned a " + newItem.getName() + " " + newItem.getTitle() + ".");
+            Axe newItem = spawnContainer.AddComponent(typeof(Axe)) as Axe;
+            Debug.Log("Spawned a " + newItem.Name + " " + newItem.Title + ".");
 
             spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
             spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
@@ -69,7 +69,7 @@ public class Player : NetworkBehaviour
         {
             GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
             Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
-            Debug.Log("Dropped a " + equipped.getName() + ".");
+            Debug.Log("Dropped a " + equipped.Name + ".");
             equipped = null;
 
             spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
@@ -100,13 +100,13 @@ public class Player : NetworkBehaviour
                     if (equipped == null) // pick up the item
                     {
                         equipped = pickup;
-                        Debug.Log("Picked up '" + pickup.getName() + "'!");
-                        interaction.DestroyObject(closestObject);
+                        Debug.Log("Picked up '" + pickup.Name + "'!");
+                        //interaction.DestroyObject(closestObject);
                         //Destroy(closestObject);
                     }
                     else // already have an item - do nothing
                     {
-                        Debug.Log("Cannot pick up '" + pickup.getName() + "' - you already have an item.");
+                        Debug.Log("Cannot pick up '" + pickup.Name + "' - you already have an item.");
                         closestObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 4f), Random.Range(0f, 1f)));
                         closestObject.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
                     }
@@ -114,7 +114,7 @@ public class Player : NetworkBehaviour
                 }
                 else //interactable is not an item
                 {
-                    Debug.Log("Interacted with '" + closestObject.GetComponent<Item>().getName() + "' !");
+                    Debug.Log("Interacted with '" + closestObject.GetComponent<Item>().Name + "' !");
                     //interaction.DestroyObject(closestObject);
                 }
             }
@@ -124,7 +124,7 @@ public class Player : NetworkBehaviour
         {
             interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);
             interactLabel.transform.rotation = Camera.main.transform.rotation;
-            interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Item>().getName();
+            interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Item>().Name;
 
         }
         else

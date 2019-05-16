@@ -5,12 +5,15 @@ using UnityEngine;
 public class Axe : Weapon
 {
 
-    public GameObject hitbox;
-    public readonly new string name = "Axe";
-    
-    public bool useItem(Player user)
+    public Axe() : base()
     {
-        Instantiate(hitbox);
+        Name = "Axe";
+    }
+
+    public override bool UseItem(Player user)
+    {
+        Debug.Log("Axe swung!");
+        Instantiate();
         return true;
     }
 
