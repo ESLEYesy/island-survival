@@ -1886,12 +1886,12 @@ MonoBehaviour:
       m_Calls: []
     m_TypeName: ToggleEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
   chatBox: Enter message...
+  equipped: {fileID: 0}
   itemContainerPrefab: {fileID: 1507252404410314503, guid: 8bac596e61af5f64c93c5368b410ac0d,
     type: 3}
   textMeshPrefab: {fileID: 1972066348266862950, guid: dae8d855f67dde349b16f4905c43372d,
     type: 3}
   interactionRadius: {fileID: 3817050849830389854}
-  interaction: {fileID: 0}
   throwForce: 15
 --- !u!114 &4335411156162426100
 MonoBehaviour:
@@ -3227,7 +3227,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: -160}
+  m_AnchoredPosition: {x: 0, y: -300}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &2516485035471555052
