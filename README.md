@@ -22,29 +22,30 @@ Party style multiplayer game where players find themselves stranded on an island
 ## Networking tasks
 - [x] Create menu
 - [x] Add networking for multiplayer
-- [ ] Create multiplayer lobby UI
-- [ ] Add name above player
-- [ ] Implement chat
+- [x] Create multiplayer lobby UI
+- [ ] Test ability to create and join games across networks
+- [x] Add name above player
+- [ ] Implement a chat
+- [ ] Create in game lobby for when game is joined
 
 ## Environment tasks
 - [x] Create island terrain for a small start map
-- [ ] Add sand layer underwater
+- [x] Add sand layer underwater
 - [x] Add day/night cycle
-- [ ] Add trees, rocks, wood, etc.
+- [ ] Add trees, rocks, wood, etc. to environment.
 
 ## Player tasks
 - [x] Create player with basic motion
 - [ ] Add swimming animations
 - [ ] Add fighting animations
-- [ ] Create player inventory
-- [ ] Create pause/settings menu
+- [ ] Create player inventory, health, air, etc.
+- [ ] Create player menus
 
 ## Bugs
 - [x] Non local player animations not working
 - [x] Camera does not follow local player
 - [x] Players can't move backwards (glitchy)
 - [x] Camera always slightly moving
-- [ ] Camera refresh issue
 
 ## Credits
 * [Mirror](https://assetstore.unity.com/packages/tools/network/mirror-129321)
