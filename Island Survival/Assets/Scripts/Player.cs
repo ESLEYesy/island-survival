@@ -134,10 +134,10 @@ public class Player : NetworkBehaviour
         }
 
     }
-    
+
     private void FixedUpdate()
     {
-        
+
     }
 
     void DisablePlayer()
@@ -172,13 +172,13 @@ public class Player : NetworkBehaviour
 
 		void OnGUI()
 		{
-			if (isLocalPlayer)
-			{
-				chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
-				if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
-				{
-
-				}
-			}
+			// if (isLocalPlayer)
+			// {
+			// 	chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
+			// 	if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
+			// 	{
+			// 
+			// 	}
+			// }
 		}
 }
