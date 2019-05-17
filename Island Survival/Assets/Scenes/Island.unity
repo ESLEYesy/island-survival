@@ -918,7 +918,7 @@ MonoBehaviour:
   startOnHeadless: 1
   serverTickRate: 30
   showDebugMessages: 0
-  offlineScene: Lobby
+  offlineScene: 
   onlineScene: Island
   transport: {fileID: 349701912}
   networkAddress: localhost
