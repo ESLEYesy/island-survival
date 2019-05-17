@@ -867,7 +867,7 @@ MonoBehaviour:
   OnClientDataReceived:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Mirror.UnityEventByteArray, Mirror, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: Mirror.UnityEventArraySegment, Mirror, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   OnClientError:
     m_PersistentCalls:
@@ -886,7 +886,7 @@ MonoBehaviour:
   OnServerDataReceived:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: Mirror.UnityEventIntByteArray, Mirror, Version=0.0.0.0, Culture=neutral,
+    m_TypeName: Mirror.UnityEventIntArraySegment, Mirror, Version=0.0.0.0, Culture=neutral,
       PublicKeyToken=null
   OnServerError:
     m_PersistentCalls:
@@ -918,8 +918,8 @@ MonoBehaviour:
   startOnHeadless: 1
   serverTickRate: 30
   showDebugMessages: 0
-  offlineScene: 
-  onlineScene: 
+  offlineScene: Lobby
+  onlineScene: Island
   transport: {fileID: 349701912}
   networkAddress: localhost
   maxConnections: 4
@@ -1362,6 +1362,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee22e36cba37ad46b0238e45874e7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  references: []
   axe: {fileID: 8509007461121581588, guid: 1c37f3e80094c9949b17e09665bb4d23, type: 3}
   axeHitbox: {fileID: 3276517948493478656, guid: 1e1bf49f8581e024aa4579ddefccfc05,
     type: 3}
