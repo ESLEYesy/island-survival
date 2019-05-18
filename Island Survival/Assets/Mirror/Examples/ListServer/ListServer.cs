@@ -38,7 +38,7 @@ namespace Mirror.Examples.ListServer
     public class ListServer : MonoBehaviour
     {
         [Header("Listen Server Connection")]
-        public string listServerIp = "127.0.0.1";
+        public string listServerIp = "35.245.20.67";
         public ushort gameServerToListenPort = 8887;
         public ushort clientToListenPort = 8888;
         public string gameServerTitle = "Deathmatch";
