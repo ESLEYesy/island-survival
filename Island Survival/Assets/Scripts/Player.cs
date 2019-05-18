@@ -2,6 +2,7 @@
 using UnityEngine.Events;
 using Mirror;
 using System.Collections.Generic;
+using UnityEngine.UI;
 
 [System.Serializable]
 public class ToggleEvent : UnityEvent<bool>{}
@@ -29,6 +30,17 @@ public class Player : NetworkBehaviour
 
     public float throwForce = 15.0f;
 
+		// Score functionality
+		// private Controls controls;
+
+		// Health
+		public int health;
+		public Image healthBar;
+
+		// Energy
+		public int energy;
+		public Image energyBar;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -39,6 +51,8 @@ public class Player : NetworkBehaviour
 					Camera.main.transform.LookAt(this.transform.position);
                     camDiff = Camera.main.transform.position - this.transform.position;
 					//Camera.main.transform.parent = this.transform;
+					//controls = GameObject.FindObjectOfType<Controls>();
+					health = 100;
 				}
 
         //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
@@ -132,7 +146,7 @@ public class Player : NetworkBehaviour
         {
             interactLabel.GetComponent<TextMesh>().text = "";
         }
-
+				UpdateHealth();
     }
 
     private void FixedUpdate()
@@ -177,8 +191,13 @@ public class Player : NetworkBehaviour
 			// 	chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
 			// 	if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
 			// 	{
-			// 
+			//
 			// 	}
 			// }
 		}
+
+		void UpdateHealth()
+    {
+   		healthBar.rectTransform.localScale = new Vector2(health/100f, 1f);
+    }
 }
