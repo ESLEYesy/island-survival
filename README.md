@@ -38,8 +38,11 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Create player with basic motion
 - [ ] Add swimming animations
 - [ ] Add fighting animations
-- [ ] Create player inventory, health, air, etc.
 - [ ] Create player menus
+- [ ] Add health bar
+- [ ] Add air bubbles
+- [ ] Add energy bar
+- [ ] Add inventory
 
 ## Bugs
 - [x] Non local player animations not working
