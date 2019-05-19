@@ -25,7 +25,7 @@ public class Sky : MonoBehaviour {
     public Vector3 dayRotateSpeed;
     public Vector3 nightRotateSpeed;
 
-    float skySpeed = 1;
+    public float skySpeed = 1;
 
 
     Light mainLight;

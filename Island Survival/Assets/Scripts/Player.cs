@@ -66,7 +66,7 @@ public class Player : NetworkBehaviour
         EnablePlayer();
 		if (isLocalPlayer)
 		{
-			Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6;
+			Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6 + this.transform.right*4;
 			Camera.main.transform.LookAt(this.transform.position);
             camDiff = Camera.main.transform.position - this.transform.position;
 			//Camera.main.transform.parent = this.transform;
