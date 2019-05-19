@@ -18,6 +18,9 @@ public class Environment : MonoBehaviour
 	public static ArrayList positions = new ArrayList();
 	public static ArrayList rotations = new ArrayList();
 
+	// Hierarchy parent to contain instantiated foliage game objects
+	public GameObject foliageContainer;
+
 	public void Awake()
 	{
 		// Main terrain dimensions
@@ -101,7 +104,7 @@ public class Environment : MonoBehaviour
 
 			randPosY = terrainHeight + addedHeight;
 			randPos = new Vector3(randPosX, randPosY, randPosZ);
-			Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.identity);
+			Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.identity, foliageContainer.transform);
 		} while (i < amount);
 	}
 }

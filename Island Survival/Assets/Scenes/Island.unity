@@ -1799,6 +1799,7 @@ MonoBehaviour:
   terrainLayer:
     serializedVersion: 2
     m_Bits: 1
+  foliageContainer: {fileID: 2141726844}
 --- !u!4 &691243247 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5228c672ceca84bc1b15a9d52d5844dc,
