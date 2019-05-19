@@ -46,6 +46,7 @@ public class Player : NetworkBehaviour
 	public Image energyBar;
 
     // Inventory
+    public GameObject inventoryUI;
     public Image inventoryItem001;
     public Image inventoryItem002;
     public Image inventoryItem003;
@@ -64,9 +65,13 @@ public class Player : NetworkBehaviour
     // Animator
     Animator animator;
 
+    // localPlayer public boolean for other scripts
+    public bool localPlayer;
+
     // Start is called before the first frame update
     void Start()
     {
+        localPlayer = isLocalPlayer;
         EnablePlayer();
 		if (isLocalPlayer)
 		{
@@ -94,11 +99,18 @@ public class Player : NetworkBehaviour
             // Set current inventory item image
             currInventoryIndex = 0;
 		}
+
+        else
+        {
+            // Disable inventory for non local player
+            inventoryUI.SetActive(false);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
             //CAMERA FOLLOW
@@ -218,6 +230,7 @@ public class Player : NetworkBehaviour
             }
 
             // Highlight selected inventory item
+            inventoryUI.SetActive(true);
             var tempColor001 = inventoryItem001.color;
             var tempColor002 = inventoryItem002.color;
             var tempColor003 = inventoryItem003.color;
@@ -273,6 +286,11 @@ public class Player : NetworkBehaviour
             inventoryItem003.color = tempColor003;
             inventoryItem004.color = tempColor004;
             inventoryItem005.color = tempColor005;
+        }
+
+        else
+        {
+            inventoryUI.SetActive(false);
         }
     }
 
