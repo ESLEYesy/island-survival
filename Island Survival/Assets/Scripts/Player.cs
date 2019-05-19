@@ -3,6 +3,7 @@ using UnityEngine.Events;
 using Mirror;
 using System.Collections.Generic;
 using UnityEngine.UI;
+using System;
 
 [System.Serializable]
 public class ToggleEvent : UnityEvent<bool>{}
@@ -18,7 +19,11 @@ public class Player : NetworkBehaviour
 
 
     private List<Item> inventory  = new List<Item>();
-    public Item equipped;
+    public Type equipped;
+    private GameObject equippedObject;
+
+    public GameObject itemMount;
+    public GameObject axePrefab;
 
     Vector3 camDiff;
     public GameObject itemContainerPrefab;
@@ -119,12 +124,12 @@ public class Player : NetworkBehaviour
             //spawn item - K (axe)
             if (Input.GetKeyDown("k"))
             {
-                GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
+                GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), UnityEngine.Random.rotation);
                 Axe newItem = spawnContainer.AddComponent(typeof(Axe)) as Axe;
                 Debug.Log("Spawned a " + newItem.Name + " " + newItem.Title + ".");
 
                 spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+                spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f)));
             }
 
             if (Input.GetKeyDown("m"))
@@ -137,20 +142,24 @@ public class Player : NetworkBehaviour
             //drop item - X
             if (equipped != null && Input.GetKeyDown("x"))
             {
-                GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
+                GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), UnityEngine.Random.rotation);
                 Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
                 Debug.Log("Dropped a " + equipped.Name + ".");
+
                 inventoryPic001.gameObject.SetActive(false);
                 equipped = null;
+                Destroy(equippedObject);
+                equippedObject = null;
 
                 spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+                spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f)));
             }
 
             //use item - MOUSE1
             if (equipped != null && Input.GetMouseButtonDown(0))
             {
-                equipped.UseItem(this);
+                Debug.Log("Swung the axe!");
+                //equipped.UseItem(this);
             }
 
             //interact item - E
@@ -170,21 +179,27 @@ public class Player : NetworkBehaviour
 
                         if (equipped == null) // pick up the item
                         {
-                            equipped = pickup;
+                            equipped = pickup.GetType();
+                            equippedObject = Instantiate(axePrefab, itemMount.transform.position, itemMount.transform.rotation);
+                            equippedObject.transform.SetParent(itemMount.transform);
+                            equippedObject.GetComponent<Rigidbody>().isKinematic = true;
+                            equippedObject.GetComponent<Rigidbody>().detectCollisions = false;
+
+
                             Debug.Log("Picked up '" + pickup.Name + "'!");
                             
                             // For now just pick up Axe
                             inventoryPic001.sprite = axeSprite;
                             inventoryPic001.gameObject.SetActive(true);
                             //closestObject
-                            //interaction.DestroyObject(closestObject);
+                            interaction.DestroyObject(closestObject);
                             //Destroy(closestObject);
                         }
                         else // already have an item - do nothing
                         {
                             Debug.Log("Cannot pick up '" + pickup.Name + "' - you already have an item.");
-                            closestObject.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(0f, 1f), Random.Range(0f, 4f), Random.Range(0f, 1f)));
-                            closestObject.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+                            closestObject.GetComponent<Rigidbody>().AddForce(new Vector3(UnityEngine.Random.Range(0f, 1f), UnityEngine.Random.Range(0f, 4f), UnityEngine.Random.Range(0f, 1f)));
+                            closestObject.GetComponent<Rigidbody>().AddTorque(new Vector3(UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f), UnityEngine.Random.Range(0f, 2f)));
                         }
 
                     }
@@ -201,7 +216,6 @@ public class Player : NetworkBehaviour
                 interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);
                 interactLabel.transform.rotation = Camera.main.transform.rotation;
                 interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Item>().Name;
-
             }
             else
             {
