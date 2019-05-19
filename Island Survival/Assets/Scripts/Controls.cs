@@ -38,7 +38,7 @@ public class Controls : MonoBehaviour
         else
         {
             string randName = "Player ";
-            randName += Random.Range(1,players.Length).ToString();
+            randName += players.Length.ToString();
             playerName.text = randName;
         }        
     }
