@@ -29,6 +29,8 @@ public class Underwater : MonoBehaviour
     private bool bubbleCheckCompleted;
     private bool isHidden;
 
+    private bool hideTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -60,6 +62,7 @@ public class Underwater : MonoBehaviour
         //hide bubbles
         isHidden = true;
         SetBubbleAlpha(0f);
+        hideTimer = false;
     }
 
     private void SetBubbleAlpha(float alpha)
@@ -85,15 +88,15 @@ public class Underwater : MonoBehaviour
         {
             if (isUnderwater) // if we are underwater...
             {
+                CancelInvoke("HideUI");
                 if (isHidden) // and bubbles are currently hidden, show bubbles
                 {
                     SetBubbleAlpha(100f);
-                    
                 }
             }
             else // if we aren't underwater...
             {
-                if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
+                if (!isHidden && numBubbles >= 5 && !hideTimer) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
                 {
                     Invoke("HideUI", 2.0f);
                 }
