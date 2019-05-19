@@ -28,17 +28,19 @@ public class Player : NetworkBehaviour
     Vector3 camDiff;
     public GameObject itemContainerPrefab;
     public GameObject textMeshPrefab;
+    public GameObject textMeshName;
     public GameObject interactionRadius;
     private PlayerInteraction interaction;
 
     private GameObject interactLabel;
+    private GameObject playerNameLabel;
 
     public float throwForce = 15.0f;
 
     // Score functionality
     // private Controls controls;
 
-    //UI
+    // UI
     public GameObject dashboard;
     public float bottomPadding = 50f;
 
@@ -55,7 +57,6 @@ public class Player : NetworkBehaviour
     public int jumpCost;
 
     // Inventory
-    public GameObject inventoryUI;
     public Image inventoryItem001;
     public Image inventoryItem002;
     public Image inventoryItem003;
@@ -77,9 +78,30 @@ public class Player : NetworkBehaviour
     // localPlayer public boolean for other scripts
     public bool localPlayer;
 
+    // Array to store all players
+    public GameObject[] players;
+
     // Start is called before the first frame update
     void Start()
     {
+        // Grab all players
+        players = GameObject.FindGameObjectsWithTag("Player");
+
+        // Name setup
+        playerNameLabel = Instantiate(textMeshName);
+        playerNameLabel.transform.rotation = Camera.main.transform.rotation;
+        if (StaticData.PlayerName != null && StaticData.PlayerName != "")
+        {
+            playerNameLabel.GetComponent<TextMesh>().text = StaticData.PlayerName;
+        }
+
+        else
+        {
+            string randName = "Player ";
+            randName += players.Length.ToString();
+            playerNameLabel.GetComponent<TextMesh>().text = randName;
+        }  
+
         localPlayer = isLocalPlayer;
         EnablePlayer();
         if (isLocalPlayer)
@@ -109,13 +131,14 @@ public class Player : NetworkBehaviour
             // Set current inventory item image
             currInventoryIndex = 0;
 
-            
+            // Set player name position for local player
+            playerNameLabel.transform.position = transform.position + new Vector3(0f, 2f, 0f);
         }
 
         else
         {
-            // Disable inventory for non local player
-            inventoryUI.SetActive(false);
+            // Disable UI elements for non local player
+            dashboard.SetActive(false);
         }
     }
 
@@ -125,8 +148,11 @@ public class Player : NetworkBehaviour
         localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
-            //CAMERA FOLLOW
+            // Camera follow
             Camera.main.transform.position = this.transform.position + camDiff;
+            
+            // Name follow
+            playerNameLabel.transform.position = transform.position + new Vector3(0f, 2f, 0f);
 
             //spawn item - K (axe)
             if (Input.GetKeyDown("k"))
@@ -253,7 +279,7 @@ public class Player : NetworkBehaviour
             }
 
             // Highlight selected inventory item
-            inventoryUI.SetActive(true);
+            dashboard.SetActive(true);
             var tempColor001 = inventoryItem001.color;
             var tempColor002 = inventoryItem002.color;
             var tempColor003 = inventoryItem003.color;
@@ -313,7 +339,7 @@ public class Player : NetworkBehaviour
 
         else
         {
-            inventoryUI.SetActive(false);
+            dashboard.SetActive(false);
         }
     }
 
@@ -430,5 +456,11 @@ public class Player : NetworkBehaviour
             this.gainEnergy(5);
             Debug.Log("You are out of energy.");
         }
+    }
+
+    // Destroy name when player disconnects
+    void OnDisconnectFromServer()
+    {
+        Destroy(textMeshName);
     }
 }

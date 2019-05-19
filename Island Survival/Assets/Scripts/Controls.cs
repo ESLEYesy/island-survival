@@ -17,37 +17,14 @@ public class Controls : MonoBehaviour
     public GameObject screen;
     public Image pauseMenu;
 
-    // Array to store all players
-    public GameObject[] players;
-
-    // Player name
-    public TextMeshProUGUI playerName;
-
     // Start is called before the first frame update
     void Start()
     {
-        // Get players
-        players = GameObject.FindGameObjectsWithTag("Player");
 
-        // Set player name
-        if (StaticData.PlayerName != null && StaticData.PlayerName != "")
-        {
-            playerName.text = StaticData.PlayerName;
-        }
-
-        else
-        {
-            string randName = "Player ";
-            randName += players.Length.ToString();
-            playerName.text = randName;
-        }        
     }
 
     void Update()
     {
-        // Grab all players
-        players = GameObject.FindGameObjectsWithTag("Player");
-
     	// Restarts the game
     	if (Input.GetKeyDown("r") )
     	{
