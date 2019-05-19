@@ -115,14 +115,13 @@ public class Underwater : MonoBehaviour
                 isUnderwater = transform.position.y < waterLevel;
                 if (isUnderwater)
                 {
-                    SetUnderwater();
+                    //SetUnderwater();
                     loseBubbleCompleted = false;
                     Invoke("LoseBubble", 1);
                 }
 
                 if (!isUnderwater)
                 {
-                    SetNormal();
                     gainBubbleCompleted = false;
                     Invoke("GainBubble", 1);
                 }
@@ -227,19 +226,5 @@ public class Underwater : MonoBehaviour
     {
         player.health -= 20;
         bubbleCheckCompleted = true;
-    }
-
-    // Adjust fog for underwater effect
-    void SetUnderwater()
-    {
-        RenderSettings.fogColor = underwaterColor;
-        RenderSettings.fogDensity = 0.02f;
-    }
-
-    // Set fog back to normal
-    void SetNormal()
-    {
-        RenderSettings.fogColor = normalColor;
-        RenderSettings.fogDensity = 0.004f;
     }
 }
