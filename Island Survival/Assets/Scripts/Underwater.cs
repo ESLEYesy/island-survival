@@ -26,6 +26,7 @@ public class Underwater : MonoBehaviour
     private bool isHidden;
 
     public bool drowning;
+    public AudioSource drownBubble;
 
     // Start is called before the first frame update
     void Start()
@@ -103,7 +104,8 @@ public class Underwater : MonoBehaviour
                     // Start drowning if we are are out of air.
                     if (bubblesLeft == 0 && isUnderwater && !drowning) // Don't start drowning if we're already drowning.
                     {
-                        drowning = true;
+                        drowning = true; //start drowning!
+                        drownBubble.Play(); //play sound
                         InvokeRepeating("Drowning", 0.1f, 0.1f); //every 10th of a second
                     }
                 }

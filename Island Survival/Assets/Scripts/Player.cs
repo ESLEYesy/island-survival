@@ -105,7 +105,6 @@ public class Player : NetworkBehaviour
 
             // Update health and energy every second
             InvokeRepeating("UpdateEnergy", 1f, 1f);
-            InvokeRepeating("UpdateHealth", 1f, 1f);
 
             // Set current inventory item image
             currInventoryIndex = 0;
