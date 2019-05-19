@@ -6,19 +6,19 @@ using UnityEngine.UI;
 using System;
 
 [System.Serializable]
-public class ToggleEvent : UnityEvent<bool>{}
+public class ToggleEvent : UnityEvent<bool> { }
 
 public class Player : NetworkBehaviour
 {
-	[SerializeField] ToggleEvent onToggleShared;
-	[SerializeField] ToggleEvent onToggleLocal;
-	[SerializeField] ToggleEvent onToggleRemote;
+    [SerializeField] ToggleEvent onToggleShared;
+    [SerializeField] ToggleEvent onToggleLocal;
+    [SerializeField] ToggleEvent onToggleRemote;
 
-	[SyncVar]
-	public string chatBox = "Enter message...";
+    [SyncVar]
+    public string chatBox = "Enter message...";
 
 
-    private List<Item> inventory  = new List<Item>();
+    private List<Item> inventory = new List<Item>();
     public Type equipped;
     private GameObject equippedObject;
 
@@ -42,13 +42,17 @@ public class Player : NetworkBehaviour
     public GameObject dashboard;
     public float bottomPadding = 50f;
 
-	// Health
-	public int health;
-	public Image healthBar;
+    // Health
+    public float health;
+    public float healthMax;
+    public Image healthBar;
 
-	// Energy
-	public int energy;
-	public Image energyBar;
+    // Energy
+    public float energy;
+    public float energyMax;
+    public Image energyBar;
+
+    public int jumpCost;
 
     // Inventory
     public GameObject inventoryUI;
@@ -78,17 +82,17 @@ public class Player : NetworkBehaviour
     {
         localPlayer = isLocalPlayer;
         EnablePlayer();
-		if (isLocalPlayer)
-		{
-			Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6 + this.transform.right*4;
-			Camera.main.transform.LookAt(this.transform.position);
+        if (isLocalPlayer)
+        {
+            Camera.main.transform.position = this.transform.position - this.transform.forward * 6 + this.transform.up * 6 + this.transform.right * 4;
+            Camera.main.transform.LookAt(this.transform.position);
             camDiff = Camera.main.transform.position - this.transform.position;
-			//Camera.main.transform.parent = this.transform;
-			//controls = GameObject.FindObjectOfType<Controls>();
-        			
+            //Camera.main.transform.parent = this.transform;
+            //controls = GameObject.FindObjectOfType<Controls>();
+
             // Set health and energy
-            health = 100;
-            energy = 100;
+            health = healthMax = energy = energyMax = 100;
+            jumpCost = 5;
 
             animator = gameObject.GetComponent<Animator>();
 
@@ -98,14 +102,15 @@ public class Player : NetworkBehaviour
 
             interactLabel = Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
-    
+
             // Update health and energy every second
             InvokeRepeating("UpdateEnergy", 1f, 1f);
-            InvokeRepeating("UpdateHealth", 1f, 1f);
 
             // Set current inventory item image
             currInventoryIndex = 0;
-		}
+
+            
+        }
 
         else
         {
@@ -145,7 +150,7 @@ public class Player : NetworkBehaviour
             if (equipped != null && Input.GetKeyDown("x"))
             {
                 GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), UnityEngine.Random.rotation);
-               // Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
+                // Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
                 spawnContainer.AddComponent<Axe>();
 
                 Debug.Log("Dropped a " + equipped.Name + ".");
@@ -191,7 +196,7 @@ public class Player : NetworkBehaviour
 
 
                             Debug.Log("Picked up '" + pickup.Name + "'!");
-                            
+
                             // For now just pick up Axe
                             inventoryPic001.sprite = axeSprite;
                             inventoryPic001.gameObject.SetActive(true);
@@ -290,7 +295,7 @@ public class Player : NetworkBehaviour
                 tempColor005.a = 0.2f;
             }
 
-            else 
+            else
             {
                 tempColor001.a = 0.2f;
                 tempColor002.a = 0.2f;
@@ -319,127 +324,111 @@ public class Player : NetworkBehaviour
 
     void DisablePlayer()
     {
-    	onToggleShared.Invoke(false);
+        onToggleShared.Invoke(false);
 
-    	if (isLocalPlayer)
-    	{
-    		onToggleLocal.Invoke(false);
-    	}
+        if (isLocalPlayer)
+        {
+            onToggleLocal.Invoke(false);
+        }
 
-    	else
-    	{
-    		onToggleRemote.Invoke(false);
-    	}
+        else
+        {
+            onToggleRemote.Invoke(false);
+        }
     }
 
     void EnablePlayer()
     {
-    	onToggleShared.Invoke(true);
+        onToggleShared.Invoke(true);
 
-    	if (isLocalPlayer)
-    	{
-    		onToggleLocal.Invoke(true);
-    	}
+        if (isLocalPlayer)
+        {
+            onToggleLocal.Invoke(true);
+        }
 
-    	else
-    	{
-    		onToggleRemote.Invoke(true);
-    	}
+        else
+        {
+            onToggleRemote.Invoke(true);
+        }
     }
 
-		void OnGUI()
-		{
-			// if (isLocalPlayer)
-			// {
-			// 	chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
-			// 	if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
-			// 	{
-			//
-			// 	}
-			// }
-		}
-
-	void UpdateHealth()
+    void OnGUI()
     {
-        if (health == 0)
+        // if (isLocalPlayer)
+        // {
+        // 	chatBox = GUI.TextField(new Rect(25, Screen.height - 40, 120, 30), chatBox);
+        // 	if (GUI.Button(new Rect(150, Screen.height - 40, 80, 30), "Send"))
+        // 	{
+        //
+        // 	}
+        // }
+    }
+
+    public void loseHealth(int damage)
+    {
+        this.health = (this.health <= damage) ? 0 : this.health - damage;
+        if (this.health == 0) //DIE
         {
             Debug.Log("You died.");
-            healthBar.rectTransform.localScale = new Vector2(0f, 1f);
         }
-
-        else if (health > 0)
-        {
-            healthBar.rectTransform.localScale = new Vector2(health/100f, 1f);
-        }
-
-        // Full energy allows you to regen health
-        else if (energy == 100 && health < 100)
-        {
-            health += 1;
-        }
+        updateHealthBar();
     }
 
-    void UpdateEnergy()
+    public void gainHealth(int healing)
     {
-        // Player loses 5 energy when jumping
-        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidFall" ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidJumpForwardLeft" ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidMidAirRight" ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidJumpForwardRight" ||
-            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidMidAirLeft")
+        this.health = (this.health >= this.healthMax - healing) ? this.healthMax : this.health + healing;
+        updateHealthBar();
+    }
+
+    public void gainEnergy(int energy)
+    {
+        this.energy = (this.energy >= this.energyMax - energy) ? this.energyMax : this.energy + energy;
+        updateEnergyBar();
+    }
+
+    public void loseEnergy(int energy)
+    {
+        this.energy = (this.energy <= energy) ? 0 : this.energy - energy;
+        updateEnergyBar();
+    }
+
+    private void updateHealthBar()
+    {
+        healthBar.rectTransform.localScale = new Vector3(health / healthMax, 1f, 1f);
+    }
+
+    private void updateEnergyBar()
+    {
+        energyBar.rectTransform.localScale = new Vector3(energy / energyMax, 1f, 1f);
+    }
+
+    private void UpdateEnergy() // called every second
+    {
+        if (energy == energyMax)
         {
-            if (energy > 0)
-            {
-                energy -= 5;
-            }
-
-            else
-            {
-                // Do something
-                Debug.Log("You are out of energy.");
-            }
-
+            this.gainHealth(1); // heal 3 health when full on energy.
         }
 
-        // Player loses 2 energy while walking/running
-        else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidWalk")
+        if (energy > 0) // we have energy to spend
         {
-            if (energy > 0)
+            if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidWalk") // Player loses 2 energy while walking/running
             {
-                energy -= 2;
+                this.loseEnergy(2);
             }
-
-            else
+            else if (false) // Player loses energy when fighting, etc.
             {
-                // Lose health
-                health -= 10;
+                // Implement later on
+            }
+            else // If player does nothing to lose energy, they gain energy back.
+            {
+                gainEnergy(5);
             }
         }
-
-        // Player loses energy when fighting, etc.
-        else if (false)
-        {
-            // Implement later on
-        }
-
-        // Player regains energy
         else
         {
-            if (energy < 100)
-            {
-                energy += 1;
-            }
-        }
-
-        // Update energy bar
-        if (energy > 0)
-        {
-            energyBar.rectTransform.localScale = new Vector2(energy/100f, 1f);
-        }
-
-        else
-        {
-            energyBar.rectTransform.localScale = new Vector2(0f, 1f);
+            this.loseHealth(1);
+            this.gainEnergy(5);
+            Debug.Log("You are out of energy.");
         }
     }
 }
