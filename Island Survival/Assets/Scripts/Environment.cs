@@ -25,7 +25,19 @@ public class Environment : MonoBehaviour
 		terrainTop = terrainBottom + terrainLength;
 
 		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 300, 0f);
-		
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 300, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 300, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 150, 0f);
+		InstantiateRandomPosition("Prefabs/island_bush_1", 150, 0f);
+		InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
+		InstantiateRandomPosition("Prefabs/island_bush_palm", 150, 0f);
+		InstantiateRandomPosition("Prefabs/island_cattail", 150, 0f);
+		InstantiateRandomPosition("Prefabs/island_dirtpile", 150, 0f);
 	}
 
 	public void InstantiateRandomPosition(string resource, int amount, float addedHeight)
