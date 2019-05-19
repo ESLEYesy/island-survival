@@ -41,6 +41,14 @@ public class Player : NetworkBehaviour
 	public int energy;
 	public Image energyBar;
 
+    // Inventory
+    public Image inventoryItem001;
+    public Image inventoryItem002;
+    public Image inventoryItem003;
+    public Image inventoryItem004;
+    public Image inventoryItem005;
+    public int currInventoryIndex;
+
     // Animator
     Animator animator;
 
@@ -69,6 +77,10 @@ public class Player : NetworkBehaviour
         // Update health and energy every second
         InvokeRepeating("UpdateEnergy", 1f, 1f);
         InvokeRepeating("UpdateHealth", 1f, 1f);
+
+        // Set current inventory item image
+        currInventoryIndex = 0;
+
     }
 
     // Update is called once per frame
@@ -156,6 +168,84 @@ public class Player : NetworkBehaviour
         {
             interactLabel.GetComponent<TextMesh>().text = "";
         }
+
+        // Inventory scroll wheel functionality
+        var delta = Input.GetAxis("Mouse ScrollWheel");
+        if (delta > 0f)
+        {
+            // Scrolling down goes left in inventory
+            if (currInventoryIndex == 0)
+            {
+                currInventoryIndex = 5;
+            }
+
+            else
+            {
+                currInventoryIndex = (currInventoryIndex - 1) % 5;
+            }
+        }
+        else if (delta < 0f)
+        {
+            // Scrolling up goes right in inventory
+            currInventoryIndex = (currInventoryIndex + 1) % 5;
+        }
+
+        // Highlight selected inventory item
+        var tempColor001 = inventoryItem001.color;
+        var tempColor002 = inventoryItem002.color;
+        var tempColor003 = inventoryItem003.color;
+        var tempColor004 = inventoryItem004.color;
+        var tempColor005 = inventoryItem005.color;
+        if (currInventoryIndex == 0)
+        {
+            tempColor001.a = 1f;
+            tempColor002.a = 0.2f;
+            tempColor003.a = 0.2f;
+            tempColor004.a = 0.2f;
+            tempColor005.a = 0.2f;
+        }
+
+        else if (currInventoryIndex == 1)
+        {
+            tempColor001.a = 0.2f;
+            tempColor002.a = 1f;
+            tempColor003.a = 0.2f;
+            tempColor004.a = 0.2f;
+            tempColor005.a = 0.2f;
+        }
+
+        else if (currInventoryIndex == 2)
+        {
+            tempColor001.a = 0.2f;
+            tempColor002.a = 0.2f;
+            tempColor003.a = 1f;
+            tempColor004.a = 0.2f;
+            tempColor005.a = 0.2f;
+        }
+
+        else if (currInventoryIndex == 3)
+        {
+            tempColor001.a = 0.2f;
+            tempColor002.a = 0.2f;
+            tempColor003.a = 0.2f;
+            tempColor004.a = 1f;
+            tempColor005.a = 0.2f;
+        }
+
+        else 
+        {
+            tempColor001.a = 0.2f;
+            tempColor002.a = 0.2f;
+            tempColor003.a = 0.2f;
+            tempColor004.a = 0.2f;
+            tempColor005.a = 1f;
+        }
+        // Assign new colors
+        inventoryItem001.color = tempColor001;
+        inventoryItem002.color = tempColor002;
+        inventoryItem003.color = tempColor003;
+        inventoryItem004.color = tempColor004;
+        inventoryItem005.color = tempColor005;
     }
 
     private void FixedUpdate()
