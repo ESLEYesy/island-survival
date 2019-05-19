@@ -1937,6 +1937,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 662263126}
+  - component: {fileID: 662263127}
   m_Layer: 0
   m_Name: Environment
   m_TagString: Untagged
@@ -1963,6 +1964,22 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &662263127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 662263125}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8eb9328def13040cd8249c6f704c3233, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  islandTerrain: {fileID: 616406272}
+  terrainLayer:
+    serializedVersion: 2
+    m_Bits: 1
 --- !u!4 &691243247 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400000, guid: 5228c672ceca84bc1b15a9d52d5844dc,
