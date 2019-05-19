@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -105,8 +106,11 @@ public class Underwater : MonoBehaviour
                 Invoke("BubbleCheck", 1);
             }
 
+            decimal dec = new decimal(transform.position.y);
+            double playerLevel = Math.Round((double)dec, 2);
+
             // Player becomes submerged or emerges from water
-            if ((transform.position.y < waterLevel) != isUnderwater)
+            if ((playerLevel <= waterLevel) != isUnderwater)
             {
                 isUnderwater = transform.position.y < waterLevel;
                 if (isUnderwater)
@@ -125,7 +129,7 @@ public class Underwater : MonoBehaviour
             }
 
             // Player remains underwater
-            else if (transform.position.y < waterLevel)
+            else if (playerLevel < waterLevel)
             {
                 if (numBubbles > 0 && loseBubbleCompleted)
                 {
@@ -138,7 +142,7 @@ public class Underwater : MonoBehaviour
             }
 
             // Player remains above water
-            else if (transform.position.y >= waterLevel)
+            else if (playerLevel >= waterLevel)
             {
                 if (numBubbles < 5 && gainBubbleCompleted)
                 {
