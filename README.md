@@ -41,7 +41,7 @@ Party style multiplayer game where players find themselves stranded on an island
 - [ ] Create player menus
 - [ ] Add health bar
 - [ ] Add air bubbles
-- [ ] Add energy bar
+- [x] Add energy bar
 - [ ] Add inventory
 
 ## Bugs
