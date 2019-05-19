@@ -1805,7 +1805,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309190920}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 521b611700410be45810047f0a74e899, type: 3}
   m_Name: 
@@ -1817,7 +1817,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309190920}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ce7a80d520cacc042b5fe14f373d8173, type: 3}
   m_Name: 
@@ -1900,6 +1900,7 @@ MonoBehaviour:
   healthBar: {fileID: 1415411183296423411}
   energy: 0
   energyBar: {fileID: 7318421308172416533}
+  inventoryUI: {fileID: 1013400020481077523}
   inventoryItem001: {fileID: 5814455976849730166}
   inventoryItem002: {fileID: 5717018783210772382}
   inventoryItem003: {fileID: 7499893843751689654}
@@ -1912,6 +1913,7 @@ MonoBehaviour:
   inventoryPic005: {fileID: 6524597299167633859}
   currInventoryIndex: 0
   axeSprite: {fileID: 21300000, guid: 18d8677237cb045daab33514bc82200f, type: 3}
+  localPlayer: 0
 --- !u!114 &7091674677505036682
 MonoBehaviour:
   m_ObjectHideFlags: 0

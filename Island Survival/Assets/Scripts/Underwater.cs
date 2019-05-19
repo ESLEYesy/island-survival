@@ -73,72 +73,75 @@ public class Underwater : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (isUnderwater) // if we are underwater...
+        if (player.localPlayer)
         {
-            if (isHidden) // and bubbles are currently hidden, show bubbles
+            if (isUnderwater) // if we are underwater...
             {
-                isHidden = false;
-                setBubbleAlpha(100f);
-                
+                if (isHidden) // and bubbles are currently hidden, show bubbles
+                {
+                    isHidden = false;
+                    setBubbleAlpha(100f);
+                    
+                }
             }
-        }
-        else // if we aren't underwater...
-        {
-            if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
+            else // if we aren't underwater...
             {
-                isHidden = true;
-                setBubbleAlpha(0f);
-            }
-        }
-
-        // Take off health when player has no air
-        if (numBubbles == 0 && bubbleCheckCompleted)
-        {
-            bubbleCheckCompleted = false;
-            Invoke("BubbleCheck", 1);
-        }
-
-        // Player becomes submerged or emerges from water
-        if ((transform.position.y < waterLevel) != isUnderwater)
-        {
-            isUnderwater = transform.position.y < waterLevel;
-            if (isUnderwater)
-            {
-                SetUnderwater();
-                loseBubbleCompleted = false;
-                Invoke("LoseBubble", 1);
+                if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
+                {
+                    isHidden = true;
+                    setBubbleAlpha(0f);
+                }
             }
 
-            if (!isUnderwater)
+            // Take off health when player has no air
+            if (numBubbles == 0 && bubbleCheckCompleted)
             {
-                SetNormal();
-                gainBubbleCompleted = false;
-                Invoke("GainBubble", 1);
-            }
-        }
-
-        // Player remains underwater
-        else if (transform.position.y < waterLevel)
-        {
-            if (numBubbles > 0 && loseBubbleCompleted)
-            {
-                numBubbles -= 1;
-                currentBubble += 1;
-                loseBubbleCompleted = false;
-                Invoke("LoseBubble", 1);
+                bubbleCheckCompleted = false;
+                Invoke("BubbleCheck", 1);
             }
 
-        }
-
-        // Player remains above water
-        else if (transform.position.y >= waterLevel)
-        {
-            if (numBubbles < 5 && gainBubbleCompleted)
+            // Player becomes submerged or emerges from water
+            if ((transform.position.y < waterLevel) != isUnderwater)
             {
-                numBubbles += 1;
-                currentBubble -= 1;
-                gainBubbleCompleted = false;
-                Invoke("GainBubble", 1);
+                isUnderwater = transform.position.y < waterLevel;
+                if (isUnderwater)
+                {
+                    SetUnderwater();
+                    loseBubbleCompleted = false;
+                    Invoke("LoseBubble", 1);
+                }
+
+                if (!isUnderwater)
+                {
+                    SetNormal();
+                    gainBubbleCompleted = false;
+                    Invoke("GainBubble", 1);
+                }
+            }
+
+            // Player remains underwater
+            else if (transform.position.y < waterLevel)
+            {
+                if (numBubbles > 0 && loseBubbleCompleted)
+                {
+                    numBubbles -= 1;
+                    currentBubble += 1;
+                    loseBubbleCompleted = false;
+                    Invoke("LoseBubble", 1);
+                }
+
+            }
+
+            // Player remains above water
+            else if (transform.position.y >= waterLevel)
+            {
+                if (numBubbles < 5 && gainBubbleCompleted)
+                {
+                    numBubbles += 1;
+                    currentBubble -= 1;
+                    gainBubbleCompleted = false;
+                    Invoke("GainBubble", 1);
+                }
             }
         }
     }
