@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -27,6 +28,8 @@ public class Underwater : MonoBehaviour
     private bool gainBubbleCompleted;
     private bool bubbleCheckCompleted;
     private bool isHidden;
+
+    private bool hideTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -59,6 +62,7 @@ public class Underwater : MonoBehaviour
         //hide bubbles
         isHidden = true;
         SetBubbleAlpha(0f);
+        hideTimer = false;
     }
 
     private void SetBubbleAlpha(float alpha)
@@ -84,15 +88,15 @@ public class Underwater : MonoBehaviour
         {
             if (isUnderwater) // if we are underwater...
             {
+                CancelInvoke("HideUI");
                 if (isHidden) // and bubbles are currently hidden, show bubbles
                 {
                     SetBubbleAlpha(100f);
-                    
                 }
             }
             else // if we aren't underwater...
             {
-                if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
+                if (!isHidden && numBubbles >= 5 && !hideTimer) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
                 {
                     Invoke("HideUI", 2.0f);
                 }
@@ -105,10 +109,13 @@ public class Underwater : MonoBehaviour
                 Invoke("BubbleCheck", 1);
             }
 
+            decimal dec = new decimal(transform.position.y);
+            double playerLevel = Math.Round((double)dec, 2);
+
             // Player becomes submerged or emerges from water
-            if ((transform.position.y < waterLevel) != isUnderwater)
+            if ((playerLevel <= waterLevel) != isUnderwater)
             {
-                isUnderwater = transform.position.y < waterLevel;
+                isUnderwater = playerLevel < waterLevel;
                 if (isUnderwater)
                 {
                     //SetUnderwater();
@@ -124,7 +131,7 @@ public class Underwater : MonoBehaviour
             }
 
             // Player remains underwater
-            else if (transform.position.y < waterLevel)
+            else if (playerLevel < waterLevel)
             {
                 if (numBubbles > 0 && loseBubbleCompleted)
                 {
@@ -137,7 +144,7 @@ public class Underwater : MonoBehaviour
             }
 
             // Player remains above water
-            else if (transform.position.y >= waterLevel)
+            else if (playerLevel >= waterLevel)
             {
                 if (numBubbles < 5 && gainBubbleCompleted)
                 {
