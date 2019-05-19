@@ -112,7 +112,7 @@ public class Underwater : MonoBehaviour
             // Player becomes submerged or emerges from water
             if ((playerLevel <= waterLevel) != isUnderwater)
             {
-                isUnderwater = transform.position.y < waterLevel;
+                isUnderwater = playerLevel < waterLevel;
                 if (isUnderwater)
                 {
                     //SetUnderwater();
