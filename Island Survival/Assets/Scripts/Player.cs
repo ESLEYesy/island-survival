@@ -90,9 +90,9 @@ public class Player : NetworkBehaviour
 
             animator = gameObject.GetComponent<Animator>();
 
-        dashboard.transform.position = new Vector3(Screen.width / 2, bottomPadding, 0f);
+            dashboard.transform.position = new Vector3(Screen.width / 2, bottomPadding, 0f);
 
-        //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
+            //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
             interactLabel = Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
