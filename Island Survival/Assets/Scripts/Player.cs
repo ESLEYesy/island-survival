@@ -30,8 +30,12 @@ public class Player : NetworkBehaviour
 
     public float throwForce = 15.0f;
 
-	// Score functionality
-	// private Controls controls;
+    // Score functionality
+    // private Controls controls;
+
+    //UI
+    public GameObject dashboard;
+    public float bottomPadding = 50f;
 
 	// Health
 	public int health;
@@ -76,6 +80,8 @@ public class Player : NetworkBehaviour
 
             animator = gameObject.GetComponent<Animator>();
 		}
+
+        dashboard.transform.position = new Vector3(Screen.width / 2, bottomPadding, 0f);
 
         //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 

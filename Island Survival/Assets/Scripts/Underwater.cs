@@ -38,6 +38,7 @@ public class Underwater : MonoBehaviour
 
         // Get reference to player
         player = GameObject.FindObjectOfType<Player>();
+        
 
         // Initialize bubble variables
         currentBubble = 0;
@@ -57,17 +58,23 @@ public class Underwater : MonoBehaviour
 
         //hide bubbles
         isHidden = true;
-        setBubbleAlpha(0f);
+        SetBubbleAlpha(0f);
     }
 
-    private void setBubbleAlpha(float alpha)
+    private void SetBubbleAlpha(float alpha)
     {
-        airLabel.SetActive(alpha > 0);
+        //airLabel.SetActive(alpha > 0);
+        isHidden = alpha <= 0;
         
         foreach (Image im in bubbles)
         {
             im.color = new Color(100f, 100f, 100f, alpha);
         }
+    }
+
+    private void HideUI()
+    {
+        SetBubbleAlpha(0f);
     }
 
     // Update is called once per frame
@@ -77,17 +84,14 @@ public class Underwater : MonoBehaviour
         {
             if (isHidden) // and bubbles are currently hidden, show bubbles
             {
-                isHidden = false;
-                setBubbleAlpha(100f);
-                
+                SetBubbleAlpha(100f);
             }
         }
         else // if we aren't underwater...
         {
             if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
             {
-                isHidden = true;
-                setBubbleAlpha(0f);
+                Invoke("HideUI", 2.0f);
             }
         }
 
