@@ -5,6 +5,7 @@ using UnityEngine;
 public class PlayerInteraction : MonoBehaviour
 {
 
+    //public GameObject player;
     private List<GameObject> interactable = new List<GameObject>();
     public Material noOutline;
     public Material outline;

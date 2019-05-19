@@ -143,7 +143,9 @@ public class Player : NetworkBehaviour
             if (equipped != null && Input.GetKeyDown("x"))
             {
                 GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), UnityEngine.Random.rotation);
-                Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
+               // Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
+                spawnContainer.AddComponent<Axe>();
+
                 Debug.Log("Dropped a " + equipped.Name + ".");
 
                 inventoryPic001.gameObject.SetActive(false);
