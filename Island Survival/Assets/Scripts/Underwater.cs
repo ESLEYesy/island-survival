@@ -15,10 +15,10 @@ public class Underwater : MonoBehaviour
 
 	// Handling air and bubbles for the player
 	public Image bubble001;
-  public Image bubble002;
-  public Image bubble003;
-  public Image bubble004;
-  public Image bubble005;
+    public Image bubble002;
+    public Image bubble003;
+    public Image bubble004;
+    public Image bubble005;
 	private int currentBubble;
 	private int numBubbles;
 	private bool loseBubbleCompleted;

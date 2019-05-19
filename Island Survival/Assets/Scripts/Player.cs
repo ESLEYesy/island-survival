@@ -30,35 +30,44 @@ public class Player : NetworkBehaviour
 
     public float throwForce = 15.0f;
 
-		// Score functionality
-		// private Controls controls;
+	// Score functionality
+	// private Controls controls;
 
-		// Health
-		public int health;
-		public Image healthBar;
+	// Health
+	public int health;
+	public Image healthBar;
 
-		// Energy
-		public int energy;
-		public Image energyBar;
+	// Energy
+	public int energy;
+	public Image energyBar;
+
+    // Animator
+    Animator animator;
 
     // Start is called before the first frame update
     void Start()
     {
         EnablePlayer();
-				if (isLocalPlayer)
-				{
-					Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6;
-					Camera.main.transform.LookAt(this.transform.position);
-                    camDiff = Camera.main.transform.position - this.transform.position;
-					//Camera.main.transform.parent = this.transform;
-					//controls = GameObject.FindObjectOfType<Controls>();
-					health = 100;
-				}
+		if (isLocalPlayer)
+		{
+			Camera.main.transform.position = this.transform.position - this.transform.forward*6 + this.transform.up*6;
+			Camera.main.transform.LookAt(this.transform.position);
+            camDiff = Camera.main.transform.position - this.transform.position;
+			//Camera.main.transform.parent = this.transform;
+			//controls = GameObject.FindObjectOfType<Controls>();
+			health = 100;
+            energy = 100;
+
+            animator = gameObject.GetComponent<Animator>();
+		}
 
         //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
         interactLabel = Instantiate(textMeshPrefab);
         interaction = interactionRadius.GetComponent<PlayerInteraction>();
+    
+        // Update energy every second
+        InvokeRepeating("UpdateEnergy", 1f, 1f);
     }
 
     // Update is called once per frame
@@ -146,7 +155,18 @@ public class Player : NetworkBehaviour
         {
             interactLabel.GetComponent<TextMesh>().text = "";
         }
-				UpdateHealth();
+
+        // Check health
+        if (health > 0)
+        {
+            UpdateHealth();
+        }
+
+        else
+        {
+            // Do something
+            Debug.Log("You died.");
+        }
     }
 
     private void FixedUpdate()
@@ -196,8 +216,62 @@ public class Player : NetworkBehaviour
 			// }
 		}
 
-		void UpdateHealth()
+	void UpdateHealth()
     {
    		healthBar.rectTransform.localScale = new Vector2(health/100f, 1f);
+    }
+
+    void UpdateEnergy()
+    {
+        // Player loses 5 energy when jumping
+        if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidFall" ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidJumpForwardLeft" ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidMidAirRight" ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidJumpForwardRight" ||
+            animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidMidAirLeft")
+        {
+            if (energy > 0)
+            {
+                energy -= 5;
+            }
+
+            else
+            {
+                // Do something
+                Debug.Log("You are out of energy.");
+            }
+
+        }
+
+        // Player loses 2 energy while walking/running
+        else if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidWalk")
+        {
+            if (energy > 0)
+            {
+                energy -= 2;
+            }
+
+            else
+            {
+                // Do something
+                Debug.Log("You are out of energy.");
+            }
+        }
+
+        // Player loses energy when fighting, etc.
+        else if (false)
+        {
+            // Implement later on
+        }
+
+        // Player regains energy
+        else
+        {
+            if (energy < 100)
+            {
+                energy += 1;
+            }
+        }
+        energyBar.rectTransform.localScale = new Vector2(energy/100f, 1f);
     }
 }
