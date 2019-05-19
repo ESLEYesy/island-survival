@@ -103,7 +103,7 @@ public class Environment : MonoBehaviour
 				{
 					// If collision, we throw this out and try again
 					i--;
-					Debug.Log("Collided with foliage!");
+					//Debug.Log("Collided with foliage!");
 				}
 
 				else

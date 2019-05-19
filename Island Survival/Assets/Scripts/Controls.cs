@@ -26,8 +26,21 @@ public class Controls : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        // Get players
+        players = GameObject.FindGameObjectsWithTag("Player");
+
         // Set player name
-        playerName.text = StaticData.PlayerName;
+        if (StaticData.PlayerName != null && StaticData.PlayerName != "")
+        {
+            playerName.text = StaticData.PlayerName;
+        }
+
+        else
+        {
+            string randName = "Player ";
+            randName += Random.Range(1,players.Length).ToString();
+            playerName.text = randName;
+        }        
     }
 
     void Update()
