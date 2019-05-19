@@ -24,7 +24,8 @@ public class Environment : MonoBehaviour
 		terrainRight = terrainLeft + terrainWidth;
 		terrainTop = terrainBottom + terrainLength;
 
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 300, 0f);
+		
 	}
 
 	public void InstantiateRandomPosition(string resource, int amount, float addedHeight)
