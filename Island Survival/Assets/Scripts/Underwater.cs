@@ -8,7 +8,7 @@ public class Underwater : MonoBehaviour
 {
     // Water details
     public float waterLevel;
-    private bool isUnderwater;
+    public bool isUnderwater;
     private Color normalColor;
     private Color underwaterColor;
 
@@ -22,14 +22,10 @@ public class Underwater : MonoBehaviour
     public Image bubble004;
     public Image bubble005;
     private List<Image> bubbles;
-    private int currentBubble;
-    private int numBubbles;
-    private bool loseBubbleCompleted;
-    private bool gainBubbleCompleted;
-    private bool bubbleCheckCompleted;
+    public int bubblesLeft;
     private bool isHidden;
 
-    private bool hideTimer;
+    public bool drowning;
 
     // Start is called before the first frame update
     void Start()
@@ -41,15 +37,11 @@ public class Underwater : MonoBehaviour
 
         // Get reference to player
         player = GameObject.FindObjectOfType<Player>();
-        
 
         // Initialize bubble variables
-        currentBubble = 0;
+        bubblesLeft = 5;
         isUnderwater = false;
-        numBubbles = 5;
-        loseBubbleCompleted = false;
-        gainBubbleCompleted = false;
-        bubbleCheckCompleted = true;
+        drowning = false;
 
         //list form
         bubbles = new List<Image>();
@@ -62,14 +54,13 @@ public class Underwater : MonoBehaviour
         //hide bubbles
         isHidden = true;
         SetBubbleAlpha(0f);
-        hideTimer = false;
     }
 
     private void SetBubbleAlpha(float alpha)
     {
         //airLabel.SetActive(alpha > 0);
         isHidden = alpha <= 0;
-        
+
         foreach (Image im in bubbles)
         {
             im.color = new Color(100f, 100f, 100f, alpha);
@@ -80,154 +71,124 @@ public class Underwater : MonoBehaviour
     {
         SetBubbleAlpha(0f);
     }
+    private void ShowUI()
+    {
+        SetBubbleAlpha(100f);
+    }
 
     // Update is called once per frame
     void Update()
     {
         if (player.localPlayer)
         {
-            if (isUnderwater) // if we are underwater...
+            double playerLevel = Math.Round((double)(new decimal(transform.position.y)), 2); //round to 2 decimal positions
+
+            if (playerLevel <= waterLevel) // Player is underwater
             {
-                CancelInvoke("HideUI");
-                if (isHidden) // and bubbles are currently hidden, show bubbles
+                if (!isUnderwater) // Player doesn't know they're underwater yet, so start underwater activities
                 {
-                    SetBubbleAlpha(100f);
+                    isUnderwater = true;
+
+                    CancelInvoke("GainBubble");
+                    InvokeRepeating("LoseBubble", 1f, 1f);
+                    CancelInvoke("HideUI");
+
+                    if (isHidden) // If bubbles are currently hidden, show bubbles
+                    {
+                        ShowUI(); // show UI
+                    }
+                }
+                else // Player remains underwater
+                {
+                    // Start drowning if we are are out of air.
+                    if (bubblesLeft == 0 && isUnderwater && !drowning) // Don't start drowning if we're already drowning.
+                    {
+                        drowning = true;
+                        InvokeRepeating("Drowning", 0.1f, 0.1f); //every 10th of a second
+                    }
                 }
             }
-            else // if we aren't underwater...
+            else // Player has emerged
             {
-                if (!isHidden && numBubbles >= 5 && !hideTimer) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
+                if (isUnderwater) //Player doesn't know they've emerged, so start out of water activities
                 {
-                    Invoke("HideUI", 2.0f);
+                    drowning = false; //stop drowning
+                    isUnderwater = false;
+
+                    CancelInvoke("Drowning"); //stop taking damage\
+                    CancelInvoke("LoseBubble");
+                    InvokeRepeating("GainBubble", 1f, 1f);
                 }
-            }
-
-            // Take off health when player has no air
-            if (numBubbles == 0 && bubbleCheckCompleted)
-            {
-                bubbleCheckCompleted = false;
-                Invoke("BubbleCheck", 1);
-            }
-
-            decimal dec = new decimal(transform.position.y);
-            double playerLevel = Math.Round((double)dec, 2);
-
-            // Player becomes submerged or emerges from water
-            if ((playerLevel <= waterLevel) != isUnderwater)
-            {
-                isUnderwater = playerLevel < waterLevel;
-                if (isUnderwater)
+                else // Player remains emerged
                 {
-                    //SetUnderwater();
-                    loseBubbleCompleted = false;
-                    Invoke("LoseBubble", 1);
-                }
-
-                if (!isUnderwater)
-                {
-                    gainBubbleCompleted = false;
-                    Invoke("GainBubble", 1);
-                }
-            }
-
-            // Player remains underwater
-            else if (playerLevel < waterLevel)
-            {
-                if (numBubbles > 0 && loseBubbleCompleted)
-                {
-                    numBubbles -= 1;
-                    currentBubble += 1;
-                    loseBubbleCompleted = false;
-                    Invoke("LoseBubble", 1);
-                }
-
-            }
-
-            // Player remains above water
-            else if (playerLevel >= waterLevel)
-            {
-                if (numBubbles < 5 && gainBubbleCompleted)
-                {
-                    numBubbles += 1;
-                    currentBubble -= 1;
-                    gainBubbleCompleted = false;
-                    Invoke("GainBubble", 1);
+                    if (!isHidden && bubblesLeft == 5) // if bubbles are currently visible, hide bubbles if we are fully stocked on air.
+                    {
+                        Invoke("HideUI", 2.0f);
+                    }
                 }
             }
         }
     }
 
+
     // Player loses a bubble every second underwater
     void LoseBubble()
     {
-        if (isUnderwater)
+        if (bubblesLeft >= 1)
         {
-            if (currentBubble == 0)
+            switch (bubblesLeft)
             {
-                bubble001.gameObject.SetActive(false);
+                case 1:
+                    bubble005.gameObject.SetActive(false);
+                    break;
+                case 2:
+                    bubble004.gameObject.SetActive(false);
+                    break;
+                case 3:
+                    bubble003.gameObject.SetActive(false);
+                    break;
+                case 4:
+                    bubble002.gameObject.SetActive(false);
+                    break;
+                case 5:
+                    bubble001.gameObject.SetActive(false);
+                    break;
             }
-
-            else if (currentBubble == 1)
-            {
-                bubble002.gameObject.SetActive(false);
-            }
-
-            else if (currentBubble == 2)
-            {
-                bubble003.gameObject.SetActive(false);
-            }
-
-            else if (currentBubble == 3)
-            {
-                bubble004.gameObject.SetActive(false);
-            }
-
-            else
-            {
-                bubble005.gameObject.SetActive(false);
-            }
-            loseBubbleCompleted = true;
+            bubblesLeft = bubblesLeft - 1;
         }
+        
     }
 
     // Player gains a bubble every second above water
     void GainBubble()
     {
-        if (!isUnderwater)
+        if (bubblesLeft <= 5)
         {
-            if (currentBubble == 0)
+            switch (bubblesLeft)
             {
-                bubble001.gameObject.SetActive(true);
+                case 1:
+                    bubble005.gameObject.SetActive(true);
+                    break;
+                case 2:
+                    bubble004.gameObject.SetActive(true);
+                    break;
+                case 3:
+                    bubble003.gameObject.SetActive(true);
+                    break;
+                case 4:
+                    bubble002.gameObject.SetActive(true);
+                    break;
+                case 5:
+                    bubble001.gameObject.SetActive(true);
+                    break;
             }
-
-            else if (currentBubble == 1)
-            {
-                bubble002.gameObject.SetActive(true);
-            }
-
-            else if (currentBubble == 2)
-            {
-                bubble003.gameObject.SetActive(true);
-            }
-
-            else if (currentBubble == 3)
-            {
-                bubble004.gameObject.SetActive(true);
-            }
-
-            else
-            {
-                bubble005.gameObject.SetActive(true);
-            }
-
-            gainBubbleCompleted = true;
+            bubblesLeft = bubblesLeft + 1;
         }
     }
 
-    // Player loses 20 health every second they have no air
-    void BubbleCheck()
+    // Player loses 2 health every 1/10th second (20 per second) they have no air
+    void Drowning()
     {
-        player.health -= 20;
-        bubbleCheckCompleted = true;
+        player.loseHealth(2);
     }
 }
