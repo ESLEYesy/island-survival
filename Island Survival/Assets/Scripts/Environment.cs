@@ -54,11 +54,13 @@ public class Environment : MonoBehaviour
 		InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f);
 		InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 100, 0f);
 		InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f);
-		InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
+		//InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
 		InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f);
 		InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f);
 		InstantiateRandomPosition("Prefabs/island_dirtpile", 100, 0f);
 	}
+
+    
 
 	public void InstantiateRandomPosition(string resource, int amount, float addedHeight)
 	{
