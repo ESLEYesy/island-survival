@@ -17,6 +17,9 @@ public class Controls : MonoBehaviour
     public GameObject screen;
     public Image pauseMenu;
 
+    // Array to store all players
+    public GameObject[] players;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -25,6 +28,9 @@ public class Controls : MonoBehaviour
 
     void Update()
     {
+        // Grab all players
+        players = GameObject.FindGameObjectsWithTag("Player");
+        
     	// Restarts the game
     	if (Input.GetKeyDown("r") )
     	{
