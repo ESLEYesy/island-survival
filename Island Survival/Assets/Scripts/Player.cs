@@ -47,7 +47,15 @@ public class Player : NetworkBehaviour
     public Image inventoryItem003;
     public Image inventoryItem004;
     public Image inventoryItem005;
+    public Image inventoryPic001;
+    public Image inventoryPic002;
+    public Image inventoryPic003;
+    public Image inventoryPic004;
+    public Image inventoryPic005;
     public int currInventoryIndex;
+
+    // Item sprites
+    public Sprite axeSprite;
 
     // Animator
     Animator animator;
@@ -106,6 +114,7 @@ public class Player : NetworkBehaviour
             GameObject spawnContainer = Instantiate(itemContainerPrefab, (this.transform.position + this.transform.forward * 1.01f + new Vector3(0f, 0.5f, 0f)), Random.rotation);
             Item newItem = spawnContainer.AddComponent(equipped.GetType()) as Item;
             Debug.Log("Dropped a " + equipped.Name + ".");
+            inventoryPic001.gameObject.SetActive(false);
             equipped = null;
 
             spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
@@ -137,6 +146,10 @@ public class Player : NetworkBehaviour
                     {
                         equipped = pickup;
                         Debug.Log("Picked up '" + pickup.Name + "'!");
+                        
+                        // For now just pick up Axe
+                        inventoryPic001.sprite = axeSprite;
+                        inventoryPic001.gameObject.SetActive(true);
                         //closestObject
                         //interaction.DestroyObject(closestObject);
                         //Destroy(closestObject);
