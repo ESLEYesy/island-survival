@@ -44,20 +44,20 @@ public class Environment : MonoBehaviour
 		trpRight = terrainRight - 25;
 		trpTop = terrainTop + 50;
 
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 300, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 300, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 300, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 150, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 150, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 150, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 150, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 150, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 150, 0f);
-		InstantiateRandomPosition("Prefabs/island_bush_1", 150, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f);
+		InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 100, 0f);
+		InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f);
 		InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
-		InstantiateRandomPosition("Prefabs/island_bush_palm", 150, 0f);
-		InstantiateRandomPosition("Prefabs/island_cattail", 150, 0f);
-		InstantiateRandomPosition("Prefabs/island_dirtpile", 150, 0f);
+		InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f);
+		InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f);
+		InstantiateRandomPosition("Prefabs/island_dirtpile", 100, 0f);
 	}
 
 	public void InstantiateRandomPosition(string resource, int amount, float addedHeight)
@@ -97,14 +97,24 @@ public class Environment : MonoBehaviour
 			}
 			
 			
-			if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity, terrainLayer))
+			if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity))
 			{
-				terrainHeight = hit.point.y;
-			}
+				if (hit.collider.gameObject.tag == "Foliage")
+				{
+					// If collision, we throw this out and try again
+					i--;
+					Debug.Log("Collided with foliage!");
+				}
 
-			randPosY = terrainHeight + addedHeight;
-			randPos = new Vector3(randPosX, randPosY, randPosZ);
-			Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.identity, foliageContainer.transform);
+				else
+				{
+					// No collision, we are good to go
+					terrainHeight = hit.point.y;
+					randPosY = terrainHeight + addedHeight;
+					randPos = new Vector3(randPosX, randPosY, randPosZ);
+					Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f,360f),0f), foliageContainer.transform);
+				}
+			}			
 		} while (i < amount);
 	}
 }
