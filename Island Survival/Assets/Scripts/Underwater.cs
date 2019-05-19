@@ -84,28 +84,18 @@ public class Underwater : MonoBehaviour
         {
             if (isUnderwater) // if we are underwater...
             {
-<<<<<<< HEAD
-                SetBubbleAlpha(100f);
-=======
                 if (isHidden) // and bubbles are currently hidden, show bubbles
                 {
-                    isHidden = false;
-                    setBubbleAlpha(100f);
+                    SetBubbleAlpha(100f);
                     
                 }
->>>>>>> b2f28fa773f1d0b91e751b19f06ae0de5064e7ec
             }
             else // if we aren't underwater...
             {
-<<<<<<< HEAD
-                Invoke("HideUI", 2.0f);
-=======
                 if (!isHidden && numBubbles >= 5) // and bubbles are currently visible, hide bubbles if we are fully stocked on air.
                 {
-                    isHidden = true;
-                    setBubbleAlpha(0f);
+                    Invoke("HideUI", 2.0f);
                 }
->>>>>>> b2f28fa773f1d0b91e751b19f06ae0de5064e7ec
             }
 
             // Take off health when player has no air
