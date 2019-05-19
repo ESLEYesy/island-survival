@@ -66,8 +66,9 @@ public class Player : NetworkBehaviour
         interactLabel = Instantiate(textMeshPrefab);
         interaction = interactionRadius.GetComponent<PlayerInteraction>();
     
-        // Update energy every second
+        // Update health and energy every second
         InvokeRepeating("UpdateEnergy", 1f, 1f);
+        InvokeRepeating("UpdateHealth", 1f, 1f);
     }
 
     // Update is called once per frame
@@ -155,18 +156,6 @@ public class Player : NetworkBehaviour
         {
             interactLabel.GetComponent<TextMesh>().text = "";
         }
-
-        // Check health
-        if (health > 0)
-        {
-            UpdateHealth();
-        }
-
-        else
-        {
-            // Do something
-            Debug.Log("You died.");
-        }
     }
 
     private void FixedUpdate()
@@ -218,7 +207,22 @@ public class Player : NetworkBehaviour
 
 	void UpdateHealth()
     {
-   		healthBar.rectTransform.localScale = new Vector2(health/100f, 1f);
+        if (health == 0)
+        {
+            Debug.Log("You died.");
+            healthBar.rectTransform.localScale = new Vector2(0f, 1f);
+        }
+
+        else if (health > 0)
+        {
+            healthBar.rectTransform.localScale = new Vector2(health/100f, 1f);
+        }
+
+        // Full energy allows you to regen health
+        else if (energy == 100 && health < 100)
+        {
+            health += 1;
+        }
     }
 
     void UpdateEnergy()
@@ -253,8 +257,8 @@ public class Player : NetworkBehaviour
 
             else
             {
-                // Do something
-                Debug.Log("You are out of energy.");
+                // Lose health
+                health -= 10;
             }
         }
 
@@ -272,6 +276,16 @@ public class Player : NetworkBehaviour
                 energy += 1;
             }
         }
-        energyBar.rectTransform.localScale = new Vector2(energy/100f, 1f);
+
+        // Update energy bar
+        if (energy > 0)
+        {
+            energyBar.rectTransform.localScale = new Vector2(energy/100f, 1f);
+        }
+
+        else
+        {
+            energyBar.rectTransform.localScale = new Vector2(0f, 1f);
+        }
     }
 }
