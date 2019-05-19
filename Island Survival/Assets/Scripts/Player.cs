@@ -85,7 +85,9 @@ public class Player : NetworkBehaviour
             camDiff = Camera.main.transform.position - this.transform.position;
 			//Camera.main.transform.parent = this.transform;
 			//controls = GameObject.FindObjectOfType<Controls>();
-			health = 100;
+        			
+            // Set health and energy
+            health = 100;
             energy = 100;
 
             animator = gameObject.GetComponent<Animator>();

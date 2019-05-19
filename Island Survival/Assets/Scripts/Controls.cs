@@ -20,23 +20,27 @@ public class Controls : MonoBehaviour
     // Array to store all players
     public GameObject[] players;
 
+    // Player name
+    public TextMeshProUGUI playerName;
+
     // Start is called before the first frame update
     void Start()
     {
-
+        // Set player name
+        playerName.text = StaticData.PlayerName;
     }
 
     void Update()
     {
         // Grab all players
         players = GameObject.FindGameObjectsWithTag("Player");
-        
+
     	// Restarts the game
     	if (Input.GetKeyDown("r") )
     	{
-    	    centerText.text = "Restarting...";
-          screen.transform.GetChild(0).gameObject.SetActive(true);
-          Invoke("SceneChangeRestart", 3);
+            centerText.text = "Restarting...";
+            screen.transform.GetChild(0).gameObject.SetActive(true);
+            Invoke("SceneChangeRestart", 3);
     	}
 
     	// Quits the game

@@ -1952,6 +1952,7 @@ MonoBehaviour:
   screen: {fileID: 3043839948229739069}
   pauseMenu: {fileID: 4266506231663682700}
   players: []
+  playerName: {fileID: 7105237070690665261}
 --- !u!114 &3329849072024883791
 MonoBehaviour:
   m_ObjectHideFlags: 0
