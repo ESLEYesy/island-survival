@@ -17,7 +17,7 @@ public class Player : NetworkBehaviour
 	public string chatBox = "Enter message...";
 
 
-    private Queue<Item> inventory  = new Queue<Item>();
+    private List<Item> inventory  = new List<Item>();
     public Item equipped;
 
     Vector3 camDiff;
@@ -106,6 +106,13 @@ public class Player : NetworkBehaviour
 
             spawnContainer.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
             spawnContainer.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(0f, 2f), Random.Range(0f, 2f), Random.Range(0f, 2f)));
+        }
+
+        if (Input.GetKeyDown("m"))
+        {
+            Debug.Log(Screen.currentResolution);
+            Debug.Log(Screen.height);
+            Debug.Log(Screen.width);
         }
 
         //drop item - X
