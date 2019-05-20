@@ -57,7 +57,7 @@ Material:
         m_Offset: {x: 0, y: 0}
     m_Floats:
     - _AlphaTestRef: 0.5
-    - _AtmosphereThickness: 1.4
+    - _AtmosphereThickness: 1.3853745
     - _BumpScale: 1
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
