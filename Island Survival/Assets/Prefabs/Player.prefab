@@ -1927,6 +1927,8 @@ MonoBehaviour:
   players: []
   menu: {fileID: 3440084191646062734}
   menuNotActive: 0
+  settingsMenu: {fileID: 0}
+  networkManager: {fileID: 0}
 --- !u!114 &7091674677505036682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5120,7 +5122,29 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3440084191801952661}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 3440084191646062734}
+        m_MethodName: SetActive
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &3440084191888844986
@@ -5238,7 +5262,18 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 3440084191888844985}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 4899426128446916309}
+        m_MethodName: QuitGame
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
       Culture=neutral, PublicKeyToken=null
 --- !u!1 &3440084193144465352
@@ -7322,6 +7357,16 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2946487160919479292, guid: 489cc4f45eec12140b67d01fd1c598ff,
+        type: 3}
+      propertyPath: physicalAudioSource
+      value: 
+      objectReference: {fileID: 8647400294542124187}
+    - target: {fileID: 2946487160919479292, guid: 489cc4f45eec12140b67d01fd1c598ff,
+        type: 3}
+      propertyPath: headAudioSource
+      value: 
+      objectReference: {fileID: 4363526781708979213}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 489cc4f45eec12140b67d01fd1c598ff, type: 3}
 --- !u!4 &5850321661383404339 stripped
@@ -7342,3 +7387,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee22e36cba37ad46b0238e45874e7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!82 &8647400294542124187 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1157469447924937044, guid: 489cc4f45eec12140b67d01fd1c598ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7498938218245805519}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &4363526781708979213 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 6097813324551854530, guid: 489cc4f45eec12140b67d01fd1c598ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7498938218245805519}
+  m_PrefabAsset: {fileID: 0}

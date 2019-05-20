@@ -25,27 +25,7 @@ public class Controls : MonoBehaviour
 
     void Update()
     {
-    	// Restarts the game
-    	if (Input.GetKeyDown("r") )
-    	{
-            centerText.text = "Restarting...";
-            screen.transform.GetChild(0).gameObject.SetActive(true);
-            Invoke("SceneChangeRestart", 3);
-    	}
-
-    	// Quits the game
-    	if (Input.GetKeyDown("q"))
-    	{
-    		centerText.text = "Quitting...";
-    		screen.transform.GetChild(0).gameObject.SetActive(true);
-    		Invoke("SceneChange", 3);
-    	}
-
-    	// Pause and show controls
-    	if (Input.GetKeyDown("p"))
-    	{
-    		StartCoroutine(PauseCoroutine());
-    	}
+ 
     }
 
     IEnumerator PauseCoroutine() {

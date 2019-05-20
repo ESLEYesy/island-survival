@@ -89,12 +89,16 @@ public class Player : NetworkBehaviour
     // Menus
     public GameObject menu;
     public bool menuNotActive;
+    public GameObject settingsMenu;
+    public GameObject networkManager;
 
     // Start is called before the first frame update
     void Start()
     {
         // Grab all players
         players = GameObject.FindGameObjectsWithTag("Player");
+        // Get network manager
+        networkManager = GameObject.FindGameObjectsWithTag("NetworkManager")[0];
 
         localPlayer = isLocalPlayer;
         EnablePlayer();
@@ -637,10 +641,9 @@ public class Player : NetworkBehaviour
         return -1;
     }
 
-    // Destroy name when player disconnects
-    void OnPlayerDisconnected()
+    public void QuitGame()
     {
-        Debug.Log("Player disconnected.");
         Destroy(textMeshName);
+        networkManager.GetComponent<NetworkManagerHUD>().quitButtonClicked = true;        
     }
 }

@@ -22,8 +22,13 @@ namespace Mirror
         public Button hostButton;
         public Button clientButton;
         public Button serverButton;
-        public bool hostButtonClicked, clientButtonClicked, serverButtonClicked;
+        //public Button quitButton;
+        public bool hostButtonClicked, clientButtonClicked, serverButtonClicked, quitButtonClicked;
         public GameObject networkMenu;
+        public GameObject player;
+        // Array to store all players
+        public GameObject[] players;
+        public bool networkMenuActive;
 
         // void Awake()
         // {
@@ -31,10 +36,23 @@ namespace Mirror
         // }
         void Start()
         {
-            hostButtonClicked = clientButtonClicked = serverButtonClicked = false;
+            hostButtonClicked = clientButtonClicked = serverButtonClicked = quitButtonClicked = false;
             hostButton.onClick.AddListener(HostButtonClicked);
             clientButton.onClick.AddListener(ClientButtonClicked);
             serverButton.onClick.AddListener(ServerButtonClicked);
+            networkMenuActive = true;
+
+            // Get player's quit button
+            // Grab all players
+            // players = GameObject.FindGameObjectsWithTag("Player");
+            // foreach (GameObject player in players)
+            // {
+            //     if (player.GetComponent<Player>().localPlayer)
+            //     {
+            //         //quitButton = player.Find("QuitButton");
+            //     }
+            // }
+            // quitButton.onClick.AddListener(QuitButtonClicked);
         }
 
         void Update()
@@ -60,6 +78,7 @@ namespace Mirror
                         {
                             manager.StartHost();
                             networkMenu.SetActive(false);
+                            networkMenuActive = false;
                         }
                     }
 
@@ -69,6 +88,7 @@ namespace Mirror
                     {
                         manager.StartClient();
                         networkMenu.SetActive(false);
+                        networkMenuActive = false;
                     }
                     //manager.networkAddress = GUILayout.TextField(manager.networkAddress);
                     //GUILayout.EndHorizontal();
@@ -86,6 +106,7 @@ namespace Mirror
                         {
                             manager.StartServer();
                             networkMenu.SetActive(false);
+                            networkMenuActive = false;
                         }
                     }
                 }
@@ -130,10 +151,13 @@ namespace Mirror
             if (NetworkServer.active || NetworkClient.isConnected)
             {
                 // Implement this
-                //if (GUILayout.Button("Stop"))
-                //{
-                //    manager.StopHost();
-                //}
+                if (quitButtonClicked && !networkMenuActive)
+                {
+                    networkMenu.SetActive(true);
+                    networkMenuActive = true;
+                    quitButtonClicked = hostButtonClicked = clientButtonClicked = serverButtonClicked = false;
+                    manager.StopHost();
+                }
             }
 
             //GUILayout.EndArea();
@@ -152,6 +176,11 @@ namespace Mirror
         void ServerButtonClicked()
         {
             serverButtonClicked = true;
+        }
+
+        void QuitButtonClicked()
+        {
+            quitButtonClicked = true;
         }
     }
 }

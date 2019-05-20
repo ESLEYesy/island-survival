@@ -19,23 +19,13 @@ public class NetworkMenu : MonoBehaviour
 
     }
 
-    public void Host()
-    {
-        this.gameObject.SetActive(false);
-    }
-
-    public void Client()
-    {
-        this.gameObject.SetActive(false);
-    }
-
-    public void Server()
-    {
-        this.gameObject.SetActive(false);
-    }
-
     public void Quit()
     {
     	Application.Quit();
+    }
+
+    public void ShowNetworkMenu()
+    {
+        this.gameObject.SetActive(true);
     }
 }
