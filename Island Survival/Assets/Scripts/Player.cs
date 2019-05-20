@@ -81,6 +81,10 @@ public class Player : NetworkBehaviour
     // Array to store all players
     public GameObject[] players;
 
+    // Menus
+    public GameObject menu;
+    public bool menuNotActive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -131,6 +135,8 @@ public class Player : NetworkBehaviour
                 playerName = randName;
                 textMeshName.GetComponent<TextMesh>().text = playerName;
             }  
+            // Menu
+            menuNotActive = true;
         }
 
         else
@@ -334,6 +340,15 @@ public class Player : NetworkBehaviour
             inventoryItem003.color = tempColor003;
             inventoryItem004.color = tempColor004;
             inventoryItem005.color = tempColor005;
+
+            // Menu functionality
+            // Remember to change to escape
+            if (Input.GetKeyDown("m"))
+            {
+                menu.SetActive(menuNotActive);
+                menuNotActive = !menuNotActive;
+            }
+
         }
 
         else
