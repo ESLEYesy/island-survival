@@ -53,15 +53,10 @@ public class Environment : MonoBehaviour
 
         List<int> texturesAllowed = new List<int>();
         texturesAllowed.Add(2);
-
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f, texturesAllowed);
+        
         InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f, texturesAllowed);
         InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 400, 0f, texturesAllowed);
         InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 400, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f, texturesAllowed);
         InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f, texturesAllowed);
         InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f, texturesAllowed);
         InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f, texturesAllowed);
@@ -75,7 +70,17 @@ public class Environment : MonoBehaviour
         texturesAllowed.Remove(2);
         InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 1000, 0f, texturesAllowed);
 
-        
+        texturesAllowed.Remove(0);
+        texturesAllowed.Remove(1);
+        texturesAllowed.Add(2);
+
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f, texturesAllowed);
+
+
         //InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
 
 
@@ -86,7 +91,7 @@ public class Environment : MonoBehaviour
 
     public void InstantiateRandomPosition(string resource, int amount, float addedHeight, List<int> texturesAllowed)
     {
-        Debug.Log("The index of the terrain texture at 0,0 is: " + GetMainTexture(new Vector3(0f, 0f, 0f)));
+        //Debug.Log("The index of the terrain texture at 0,0 is: " + GetMainTexture(new Vector3(0f, 0f, 0f)));
         var i = 0;
         //var blpCount = 10;
         //var trpCount = 1;
@@ -147,7 +152,7 @@ public class Environment : MonoBehaviour
                 } else
                 {
                     i--;
-                    Debug.Log("No Gen - Collided with terrain texture " + texture + "!");
+                    //Debug.Log("No Gen - Collided with terrain texture " + texture + "!");
                 }
                 //}
             }

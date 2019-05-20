@@ -32,11 +32,11 @@ public class PlayerInteraction : MonoBehaviour
                     closest = obj;
                     bestDist = testDist;
                 }                
-                obj.GetComponent<MeshRenderer>().material = noOutline;
+                //obj.GetComponent<MeshRenderer>().material = noOutline;
 
             }
 
-            closest.GetComponent<MeshRenderer>().material = outline;
+            //closest.GetComponent<MeshRenderer>().material = outline;
             return closest;
         }
         else
@@ -95,7 +95,7 @@ public class PlayerInteraction : MonoBehaviour
             if (i != null)
             {
                 Debug.Log(i.Title + " '" + i.Name + "' is no longer within interacting range.");
-                other.GetComponent<MeshRenderer>().material = noOutline;
+                //other.GetComponent<MeshRenderer>().material = noOutline;
             }
         }
     }

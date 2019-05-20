@@ -14,4 +14,9 @@ public class Interactable : MonoBehaviour
         Name = "Null_Interactable";
     }
 
+    public virtual void Interact(Player user)
+    {
+
+    }
+
 }
