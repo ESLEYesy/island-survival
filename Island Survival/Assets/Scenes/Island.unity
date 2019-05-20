@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.0003148246, g: 0.0000047915, b: 0, a: 1}
+  m_IndirectSpecularColor: {r: 0.00021244542, g: 0.0000024117858, b: 0, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -461,7 +461,7 @@ GameObject:
   - component: {fileID: 349701911}
   m_Layer: 0
   m_Name: NetworkManager
-  m_TagString: Untagged
+  m_TagString: NetworkManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -488,7 +488,11 @@ MonoBehaviour:
   hostButtonClicked: 0
   clientButtonClicked: 0
   serverButtonClicked: 0
+  quitButtonClicked: 0
   networkMenu: {fileID: 7006102907806434254}
+  player: {fileID: 0}
+  players: []
+  networkMenuActive: 0
 --- !u!114 &349701912
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -10,7 +10,10 @@ public class PlayerAnimation : MonoBehaviour
     //private bool isWalkingForwardsPressed;
     //private bool isWalkingBackwardsPressed;
     //private bool isJumpingPressed;
-    //private bool isUnderwater;
+    private bool isUnderwater;
+    private bool isPunching;
+    private bool isSwinging;
+    private bool isDancing;
     //private bool rotationRequired;
     //private bool isDancingPressed;
 
@@ -27,7 +30,9 @@ public class PlayerAnimation : MonoBehaviour
         //isWalkingForwardsPressed = false;
         //isWalkingBackwardsPressed = false;
         //isJumpingPressed = false;
-        //isUnderwater = false;
+        isUnderwater = false;
+        isPunching = false;
+        isSwinging = false;
         //rotationRequired = false;
         //isDancingPressed = false;
 
@@ -47,7 +52,7 @@ public class PlayerAnimation : MonoBehaviour
 
         // Check if underwater
         //rotationRequired = !isUnderwater && transform.position.y < 10;
-        //isUnderwater = transform.position.y < 10;
+        isUnderwater = transform.position.y < 14.4;
 
         // Check if jumping
         //isJumpingPressed = Input.GetKey(KeyCode.Space);
@@ -61,14 +66,15 @@ public class PlayerAnimation : MonoBehaviour
         // Walking backwards
         //animator.SetBool("IsWalkingBackwards", isWalkingBackwardsPressed);
 
-        // Jumping while walking
-        //animator.SetBool("IsJumpingWalking", isWalkingForwardsPressed && isJumpingPressed);
+        // Punching
+        isPunching = Input.GetMouseButtonDown(1);
+        animator.SetBool("IsPunching", isPunching);
 
-        // Jumping while idle
-        //animator.SetBool("IsJumpingIdle", !isWalkingForwardsPressed && isJumpingPressed);
+        // Swinging
+        //animator.SetBool("IsSwinging", isSwinging);
 
         // Swimming
-        //animator.SetBool("IsSwimming", isUnderwater && (isWalkingForwardsPressed || isWalkingBackwardsPressed));
+        animator.SetBool("IsSwimming", isUnderwater);
 
         // Idle swim (treading water)
         //animator.SetBool("IsTreadingWater", isUnderwater);
