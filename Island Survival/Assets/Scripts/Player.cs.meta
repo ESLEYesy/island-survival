@@ -3,7 +3,29 @@ guid: f9ac90453e6fc46eaa85592db5c38816
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - itemMount: {instanceID: 0}
+  - axePrefab: {instanceID: 0}
+  - itemContainerPrefab: {instanceID: 0}
+  - textMeshPrefab: {instanceID: 0}
+  - textMeshName: {fileID: 4402705604205367522, guid: cc8ddffdc7c304c24a0efa97fe3ce3f2,
+      type: 3}
+  - interactionRadius: {instanceID: 0}
+  - dashboard: {instanceID: 0}
+  - healthBar: {instanceID: 0}
+  - energyBar: {instanceID: 0}
+  - inventoryUI: {instanceID: 0}
+  - inventoryItem001: {instanceID: 0}
+  - inventoryItem002: {instanceID: 0}
+  - inventoryItem003: {instanceID: 0}
+  - inventoryItem004: {instanceID: 0}
+  - inventoryItem005: {instanceID: 0}
+  - inventoryPic001: {instanceID: 0}
+  - inventoryPic002: {instanceID: 0}
+  - inventoryPic003: {instanceID: 0}
+  - inventoryPic004: {instanceID: 0}
+  - inventoryPic005: {instanceID: 0}
+  - axeSprite: {instanceID: 0}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

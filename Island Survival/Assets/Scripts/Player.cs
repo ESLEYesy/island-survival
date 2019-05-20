@@ -36,10 +36,12 @@ public class Player : NetworkBehaviour
 
     public float throwForce = 15.0f;
 
-    // Score functionality
-    // private Controls controls;
+    // Player name
+    public GameObject textMeshName;
+    [SyncVar]
+    public string playerName;
 
-    //UI
+    // UI
     public GameObject dashboard;
     public float bottomPadding = 50f;
     public bool showAllLabels;
@@ -57,7 +59,6 @@ public class Player : NetworkBehaviour
     public int jumpCost;
 
     // Inventory
-    public GameObject inventoryUI;
     public Image inventoryItem001;
     public Image inventoryItem002;
     public Image inventoryItem003;
@@ -79,9 +80,15 @@ public class Player : NetworkBehaviour
     // localPlayer public boolean for other scripts
     public bool localPlayer;
 
+    // Array to store all players
+    public GameObject[] players;
+
     // Start is called before the first frame update
     void Start()
     {
+        // Grab all players
+        players = GameObject.FindGameObjectsWithTag("Player");
+
         localPlayer = isLocalPlayer;
         EnablePlayer();
         if (isLocalPlayer)
@@ -113,23 +120,41 @@ public class Player : NetworkBehaviour
             currInventoryIndex = 0;
             showAllLabels = false;
 
-            
+            // Name setup
+            textMeshName.transform.position = transform.position + new Vector3(0f, 2f, 0f);
+            if (StaticData.PlayerName != null && StaticData.PlayerName != "")
+            {
+                playerName = StaticData.PlayerName;
+                textMeshName.GetComponent<TextMesh>().text = playerName;
+            }
+
+            else
+            {
+                string randName = "Player ";
+                randName += players.Length.ToString();
+                playerName = randName;
+                textMeshName.GetComponent<TextMesh>().text = playerName;
+            }  
         }
 
         else
         {
-            // Disable inventory for non local player
-            inventoryUI.SetActive(false);
+            // Disable UI elements for non local player
+            dashboard.SetActive(false);
         }
     }
 
     // Update is called once per frame
     void Update()
     {
+        // Name follow
+        textMeshName.transform.position = transform.position + new Vector3(0f, 2f, 0f);
+        textMeshName.GetComponent<TextMesh>().text = playerName;
+
         localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
-            //CAMERA FOLLOW
+            // Camera follow
             Camera.main.transform.position = this.transform.position + camDiff;
 
             //spawn item - K (axe)
@@ -336,7 +361,7 @@ public class Player : NetworkBehaviour
             }
 
             // Highlight selected inventory item
-            inventoryUI.SetActive(true);
+            dashboard.SetActive(true);
             var tempColor001 = inventoryItem001.color;
             var tempColor002 = inventoryItem002.color;
             var tempColor003 = inventoryItem003.color;
@@ -396,7 +421,7 @@ public class Player : NetworkBehaviour
 
         else
         {
-            inventoryUI.SetActive(false);
+            dashboard.SetActive(false);
         }
     }
 
@@ -513,5 +538,12 @@ public class Player : NetworkBehaviour
             this.gainEnergy(5);
             Debug.Log("You are out of energy.");
         }
+    }
+
+    // Destroy name when player disconnects
+    void OnPlayerDisconnected()
+    {
+        Debug.Log("Player disconnected.");
+        Destroy(textMeshName);
     }
 }
