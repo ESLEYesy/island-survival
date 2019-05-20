@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c626ab3fc6113471baacaeabb5ab9e19
+guid: 57bb8e9a8048c4723af1205b80f578f5
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
@@ -54,35 +54,35 @@ ModelImporter:
     100096: OccupyGuyFacialAnim_Joint
     100098: Pelvis
     100100: Pouch
-    100102: //RootNode
-    100104: Right_ShortSleeve
-    100106: Right_Sleeve
-    100108: RightArm
-    100110: RightFoot
-    100112: RightForeArm
-    100114: RightHand
-    100116: RightHandIndex1
-    100118: RightHandIndex2
-    100120: RightHandIndex3
-    100122: RightHandMiddle1
-    100124: RightHandMiddle2
-    100126: RightHandMiddle3
-    100128: RightHandPinky1
-    100130: RightHandPinky2
-    100132: RightHandPinky3
-    100134: RightHandRing1
-    100136: RightHandRing2
-    100138: RightHandRing3
-    100140: RightHandThumb1
-    100142: RightHandThumb2
-    100144: RightHandThumb3
-    100146: RightLeg
-    100148: RightShoulder
-    100150: RightToeBase
-    100152: RightUpLeg
-    100154: Spine
-    100156: Spine1
-    100158: Spine2
+    100102: Right_ShortSleeve
+    100104: Right_Sleeve
+    100106: RightArm
+    100108: RightFoot
+    100110: RightForeArm
+    100112: RightHand
+    100114: RightHandIndex1
+    100116: RightHandIndex2
+    100118: RightHandIndex3
+    100120: RightHandMiddle1
+    100122: RightHandMiddle2
+    100124: RightHandMiddle3
+    100126: RightHandPinky1
+    100128: RightHandPinky2
+    100130: RightHandPinky3
+    100132: RightHandRing1
+    100134: RightHandRing2
+    100136: RightHandRing3
+    100138: RightHandThumb1
+    100140: RightHandThumb2
+    100142: RightHandThumb3
+    100144: RightLeg
+    100146: RightShoulder
+    100148: RightToeBase
+    100150: RightUpLeg
+    100152: Spine
+    100154: Spine1
+    100156: Spine2
+    100158: //RootNode
     400000: Bag
     400002: Bind_Left_JacketString
     400004: Bind_Left_JacketString1
@@ -134,36 +134,36 @@ ModelImporter:
     400096: OccupyGuyFacialAnim_Joint
     400098: Pelvis
     400100: Pouch
-    400102: //RootNode
-    400104: Right_ShortSleeve
-    400106: Right_Sleeve
-    400108: RightArm
-    400110: RightFoot
-    400112: RightForeArm
-    400114: RightHand
-    400116: RightHandIndex1
-    400118: RightHandIndex2
-    400120: RightHandIndex3
-    400122: RightHandMiddle1
-    400124: RightHandMiddle2
-    400126: RightHandMiddle3
-    400128: RightHandPinky1
-    400130: RightHandPinky2
-    400132: RightHandPinky3
-    400134: RightHandRing1
-    400136: RightHandRing2
-    400138: RightHandRing3
-    400140: RightHandThumb1
-    400142: RightHandThumb2
-    400144: RightHandThumb3
-    400146: RightLeg
-    400148: RightShoulder
-    400150: RightToeBase
-    400152: RightUpLeg
-    400154: Spine
-    400156: Spine1
-    400158: Spine2
-    7400000: Punching
+    400102: Right_ShortSleeve
+    400104: Right_Sleeve
+    400106: RightArm
+    400108: RightFoot
+    400110: RightForeArm
+    400112: RightHand
+    400114: RightHandIndex1
+    400116: RightHandIndex2
+    400118: RightHandIndex3
+    400120: RightHandMiddle1
+    400122: RightHandMiddle2
+    400124: RightHandMiddle3
+    400126: RightHandPinky1
+    400128: RightHandPinky2
+    400130: RightHandPinky3
+    400132: RightHandRing1
+    400134: RightHandRing2
+    400136: RightHandRing3
+    400138: RightHandThumb1
+    400140: RightHandThumb2
+    400142: RightHandThumb3
+    400144: RightLeg
+    400146: RightShoulder
+    400148: RightToeBase
+    400150: RightUpLeg
+    400152: Spine
+    400154: Spine1
+    400156: Spine2
+    400158: //RootNode
+    7400000: SwimmingAlt
     9500000: //RootNode
   externalObjects: {}
   materials:
@@ -194,17 +194,17 @@ ModelImporter:
     extraUserProperties: []
     clipAnimations:
     - serializedVersion: 16
-      name: Punching
+      name: SwimmingAlt
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 26
+      lastFrame: 136
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
