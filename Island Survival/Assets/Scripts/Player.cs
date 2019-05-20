@@ -31,6 +31,7 @@ public class Player : NetworkBehaviour
     public GameObject interactionRadius;
     private PlayerInteraction interaction;
 
+    private List<GameObject> interactLabels;
     private GameObject interactLabel;
 
     public float throwForce = 15.0f;
@@ -41,6 +42,7 @@ public class Player : NetworkBehaviour
     //UI
     public GameObject dashboard;
     public float bottomPadding = 50f;
+    public bool showAllLabels;
 
     // Health
     public float health;
@@ -100,6 +102,7 @@ public class Player : NetworkBehaviour
 
             //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
+            interactLabels = new List<GameObject>();
             interactLabel = Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
 
@@ -108,6 +111,7 @@ public class Player : NetworkBehaviour
 
             // Set current inventory item image
             currInventoryIndex = 0;
+            showAllLabels = false;
 
             
         }
@@ -219,7 +223,86 @@ public class Player : NetworkBehaviour
                     }
                 }
             }
-            //update closest interactable label
+
+            
+            if (Input.GetKeyDown(KeyCode.LeftAlt))
+            {
+                foreach(GameObject o in interaction.ObjectList()){ // add all interactable labels
+                    if (o != closestObject)
+                    {
+                        GameObject newLabel = Instantiate(textMeshPrefab);
+                        interactLabels.Add(newLabel);
+                        newLabel.GetComponent<TextMesh>().text = o.GetComponent<Item>().Name;
+                        newLabel.transform.position = o.transform.position + new Vector3(0f, 0.4f, 0f);
+                        newLabel.transform.rotation = Camera.main.transform.rotation;
+                        newLabel.transform.parent = o.transform;
+                    }
+                }
+
+                showAllLabels = true;
+            }
+
+            /*
+            if (showAllLabels)
+            {
+                foreach(GameObject o in interaction.ObjectList())
+                {
+                    if (!interactLabels.Contains(o)) //new object in range without a label
+                    {
+                        GameObject newLabel = Instantiate(textMeshPrefab);
+                        interactLabels.Add(newLabel);
+                        newLabel.GetComponent<TextMesh>().text = o.GetComponent<Item>().Name;
+                        newLabel.transform.position = o.transform.position + new Vector3(0f, 0.4f, 0f);
+                        newLabel.transform.rotation = Camera.main.transform.rotation;
+                        newLabel.transform.parent = o.transform;
+                    }
+
+                }
+                List<GameObject> toRemove = new List<GameObject>(); 
+                foreach (GameObject o in interactLabels)
+                {
+                    if (!interaction.ObjectList().Contains(o)) // object left range
+                    {
+                        toRemove.Add(o);
+                    }
+                }
+                foreach (GameObject o in toRemove)
+                {
+                    interactLabels.Remove(o);
+                    Destroy(o);
+                }
+            }*/
+
+            if (Input.GetKeyUp(KeyCode.LeftAlt))
+            {
+                List<GameObject> toRemove = new List<GameObject>(); // remove all labels but the closest
+                foreach (GameObject o in interactLabels)
+                {
+                    if(o != closestObject)
+                    {
+                        toRemove.Add(o);
+                    }
+                }
+                foreach (GameObject o in toRemove)
+                {
+                    interactLabels.Remove(o);
+                    Destroy(o);
+                }
+                showAllLabels = false;
+            }
+
+            if(interactLabels.Count > 0) //update all labels
+            {
+                foreach(GameObject o in interactLabels){
+                    Transform parent = o.transform.parent;
+                    o.transform.parent = null;
+                    o.transform.position = parent.position + new Vector3(0f, 0.4f, 0f);
+                    o.transform.rotation = Camera.main.transform.rotation;
+                    o.transform.parent = parent;
+                }
+            }
+
+            //update closest label
             if (closestObject != null)
             {
                 interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);

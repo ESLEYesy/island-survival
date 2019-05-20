@@ -45,6 +45,11 @@ public class PlayerInteraction : MonoBehaviour
         }
     }
 
+    public List<GameObject> ObjectList()
+    {
+        return interactable;
+    }
+
     public void RemoveObject(GameObject toRemove)
     {
         interactable.Remove(toRemove);
