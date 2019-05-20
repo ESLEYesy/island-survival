@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 4116589238578036476}
   - component: {fileID: 2946487160919479292}
   - component: {fileID: 1157469447924937044}
+  - component: {fileID: 6097813324551854530}
   m_Layer: 0
   m_Name: ItemManager
   m_TagString: Untagged
@@ -44,24 +45,141 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8ee22e36cba37ad46b0238e45874e7ab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioSource: {fileID: 1157469447924937044}
+  physicalAudioSource: {fileID: 1157469447924937044}
   foodEat: {fileID: 8300000, guid: f2957a4c4ede009448d104934e4bb915, type: 3}
   crateBreak: {fileID: 8300000, guid: a3a70c9aa461dfe4c9f23d9334634829, type: 3}
   drinkGulp: {fileID: 8300000, guid: 76d28e3cca6f93c41aaa1445ab9749a2, type: 3}
+  attackSwing: {fileID: 8300000, guid: 896c1235b926cfa4c91de7a548e9d3b8, type: 3}
+  crateOpen: {fileID: 8300000, guid: 16b3e3a9cb708a94da2529037cc7cdcc, type: 3}
+  hitHard: {fileID: 8300000, guid: faa387133ba2e0f43ab6c1aa6ffbc466, type: 3}
+  hitSoft: {fileID: 8300000, guid: 2bd3dbbdcd104d041ade842722657614, type: 3}
+  itemDrop: {fileID: 8300000, guid: 90f56f2be4a647b4dae6d3522e42c25e, type: 3}
+  itemPickup: {fileID: 8300000, guid: c0ea1a8595c6f264b84329dca5e36d29, type: 3}
+  takeDamage: {fileID: 8300000, guid: 4345f9d11065bbe4389fda8f6b00234a, type: 3}
+  playerDeath: {fileID: 8300000, guid: f51e32079e2a2b7498613752a48173af, type: 3}
+  headAudioSource: {fileID: 6097813324551854530}
+  bubble: {fileID: 8300000, guid: 4d5c6201667909446bb6bb1486b8df11, type: 3}
+  lightTick: {fileID: 8300000, guid: e89b37e91b9597c4fb7a94b87aab8b98, type: 3}
+  interfaceError: {fileID: 8300000, guid: 0c2c321fb6f8b6344b7b9f7d85b883de, type: 3}
+  healDamage: {fileID: 8300000, guid: 27814d2a3f8c5a648a82fe4a2eb356b3, type: 3}
+  bubbleShort: {fileID: 8300000, guid: 05df713f513e4704b8991a9b66d42088, type: 3}
   axePrefab: {fileID: 8509007461121581588, guid: 1c37f3e80094c9949b17e09665bb4d23,
     type: 3}
+  macePrefab: {fileID: 1201216770505466, guid: 7150715d3bf4af046bd2b4a395a5459d, type: 3}
+  machetePrefab: {fileID: 1887301853989766, guid: 95bf24ab250664d40871ab9b41c02769,
+    type: 3}
+  shivPrefab: {fileID: 1645363567942504, guid: e12a761147dcdb4429bcfaf143dac934, type: 3}
   rumPrefab: {fileID: 1112174935158326, guid: 97382936437c9ae439d9d9ddc6940dde, type: 3}
   breadPrefab: {fileID: 1228994051241028, guid: 9c11c9a6f6309c44abe59c2efd66bd78,
     type: 3}
   prefabs: []
   itemCratePrefab: {fileID: 153704, guid: a531176fe7f91de408409b80a7582526, type: 3}
-  axeHitbox: {fileID: 3276517948493478656, guid: 1e1bf49f8581e024aa4579ddefccfc05,
-    type: 3}
+  Hitbox: {fileID: 3276517948493478656, guid: 1e1bf49f8581e024aa4579ddefccfc05, type: 3}
   axeSprite: {fileID: 21300000, guid: 18d8677237cb045daab33514bc82200f, type: 3}
+  shivSprite: {fileID: 21300000, guid: fdef9bfbe083c634383a02920d514def, type: 3}
+  maceSprite: {fileID: 21300000, guid: 3ade7867c34bed34d9bb4f821d15539f, type: 3}
+  macheteSprite: {fileID: 21300000, guid: a456e34e83a88c04b9588b0761c2ccd5, type: 3}
   rumSprite: {fileID: 21300000, guid: 1e90ee20209c7d946a729fc1859e5a9b, type: 3}
   breadSprite: {fileID: 21300000, guid: 735e76a658093d249b7dff289d95c27d, type: 3}
   defaultSprite: {fileID: 0}
+  hpParticle: {fileID: 100000, guid: 57ff52a6b9d134c9689be872547ab590, type: 3}
 --- !u!82 &1157469447924937044
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4116589238578036478}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 0.249
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 85
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 40
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!82 &6097813324551854530
 AudioSource:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

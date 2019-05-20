@@ -12,7 +12,7 @@ public class Underwater : MonoBehaviour
     private Color normalColor;
     private Color underwaterColor;
 
-    private Player player;
+    public Player player;
     public GameObject airLabel;
 
     // Handling air and bubbles for the player
@@ -35,9 +35,6 @@ public class Underwater : MonoBehaviour
         // Initialize color for fog
         normalColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         underwaterColor = new Color(0.40f, 0.65f, 0.77f, 0.5f);
-
-        // Get reference to player
-        player = GameObject.FindObjectOfType<Player>();
 
         // Initialize bubble variables
         bubblesLeft = 5;
@@ -105,8 +102,8 @@ public class Underwater : MonoBehaviour
                     if (bubblesLeft == 0 && isUnderwater && !drowning) // Don't start drowning if we're already drowning.
                     {
                         drowning = true; //start drowning!
-                        drownBubble.Play(); //play sound
-                        InvokeRepeating("Drowning", 0.1f, 0.1f); //every 10th of a second
+                        player.playSound("bubble");
+                        InvokeRepeating("Drowning", 1f, 1f); //every 10th of a second
                     }
                 }
             }
@@ -156,6 +153,7 @@ public class Underwater : MonoBehaviour
                     bubble001.gameObject.SetActive(false);
                     break;
             }
+            player.playSound("bubbleShort");
             bubblesLeft = bubblesLeft - 1;
         }
         
@@ -188,9 +186,9 @@ public class Underwater : MonoBehaviour
         }
     }
 
-    // Player loses 2 health every 1/10th second (20 per second) they have no air
+    // Player loses 10 health every second (10 per second) they have no air
     void Drowning()
     {
-        player.loseHealth(2);
+        player.loseHealth(10);
     }
 }

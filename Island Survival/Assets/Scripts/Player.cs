@@ -52,6 +52,8 @@ public class Player : NetworkBehaviour
     public float healthMax;
     public Image healthBar;
 
+    public bool isDead;
+
     // Energy
     public float energy;
     public float energyMax;
@@ -62,6 +64,7 @@ public class Player : NetworkBehaviour
     public GameObject textMeshPrefab;
     private List<GameObject> interactLabels;
     private GameObject interactLabel;
+    private GameObject mouseLabel;
     public bool showAllLabels;
 
     // Player name
@@ -104,6 +107,7 @@ public class Player : NetworkBehaviour
             //controls = GameObject.FindObjectOfType<Controls>();
 
             // Set health and energy
+            isDead = false;
             health = healthMax = energy = energyMax = 100;
             jumpCost = 5;
 
@@ -115,6 +119,7 @@ public class Player : NetworkBehaviour
 
             interactLabels = new List<GameObject>();
             interactLabel = Instantiate(textMeshPrefab);
+            mouseLabel = Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
 
             // Update health and energy every second
@@ -156,7 +161,7 @@ public class Player : NetworkBehaviour
                 randName += players.Length.ToString();
                 playerName = randName;
                 textMeshName.GetComponent<TextMesh>().text = playerName;
-            }  
+            }
             // Menu
             menuNotActive = true;
         }
@@ -175,6 +180,47 @@ public class Player : NetworkBehaviour
             UnityEngine.Random.Range(min, max));
     }
 
+    private void interact(GameObject obj)
+    {
+        Item pickup = obj.GetComponent<Item>();
+
+        if (pickup != null) // interactable is an item
+        {
+            int inventorySpace = HasInventorySpace();
+            if (inventorySpace >= 0) // pick up the item
+            {
+
+                inventory[inventorySpace] = obj;
+                GameObject newItem = inventory[inventorySpace];
+                newItem.transform.position = itemMountPoint.transform.position;
+                newItem.transform.rotation = itemMountPoint.transform.rotation;
+                newItem.transform.parent = itemMountPoint.transform;
+                newItem.tag = "Untagged";
+                newItem.GetComponent<Rigidbody>().isKinematic = true;
+                newItem.GetComponent<Collider>().enabled = false;
+                newItem.SetActive(false);
+                interaction.RemoveObject(newItem);
+
+                Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
+                playSound("itemPickup");
+
+                updateInventory();
+            }
+            else // no space in inventory
+            {
+                Debug.Log("Cannot pick up '" + pickup.Name + "' - you have no room in your inventory!.");
+                obj.GetComponent<Rigidbody>().AddForce(RandomRange(-7f, 7f, true));
+                obj.GetComponent<Rigidbody>().AddTorque(RandomRange(-10f, -10f, false)); //toss it around
+                playSound("interfaceError");
+            }
+
+        }
+        else //interactable is not an item
+        {
+            obj.GetComponent<Interactable>().Interact(this);
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
@@ -185,19 +231,20 @@ public class Player : NetworkBehaviour
         localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
-            // Camera follow
+            //Camera follow
             Camera.main.transform.position = this.transform.position + camDiff;
 
-            //spawn item - K (axe)
+            //spawn custom item - K
             if (Input.GetKeyDown("k"))
             {
                 GameObject spawnItem = Instantiate(itemManager.itemCratePrefab, this.itemSpawnPoint.transform.position, itemSpawnPoint.transform.rotation);
                 Debug.Log("Spawned '" + spawnItem.GetComponent<Interactable>().Name + "'!");
                 spawnItem.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
                 spawnItem.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
+                playSound("itemDrop");
             }
 
-            //drop item - X
+            //drop selected item - X
             if (inventory[inventorySpaceSelected] != null && Input.GetKeyDown("x"))
             {
                 GameObject itemPrefab = inventory[inventorySpaceSelected];
@@ -206,9 +253,12 @@ public class Player : NetworkBehaviour
                 itemPrefab.transform.rotation = this.itemSpawnPoint.transform.rotation;
                 itemPrefab.tag = "Interactive";
                 inventory[inventorySpaceSelected] = null;
+                itemPrefab.GetComponent<Rigidbody>().isKinematic = false;
+                itemPrefab.GetComponent<Collider>().enabled = true;
                 itemPrefab.SetActive(true);
 
                 Debug.Log("Dropped a " + itemPrefab.GetComponent<Item>().Name + ".");
+                playSound("itemDrop");
 
                 itemPrefab.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
                 itemPrefab.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
@@ -216,7 +266,7 @@ public class Player : NetworkBehaviour
                 updateInventory();
             }
 
-            //use item - MOUSE1
+            //use selected item - MOUSE1
             if (inventory[inventorySpaceSelected] != null && Input.GetMouseButtonDown(0))
             {
                 itemManager.UseItem(this, inventory[inventorySpaceSelected].GetComponent<Item>().Name);
@@ -224,100 +274,61 @@ public class Player : NetworkBehaviour
 
             GameObject closestObject = interaction.closest;
 
-            
-            //interact item - MOUSE2
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            bool mouseOverInteractive = Physics.Raycast(ray, out hit, 500f, (1 << 8));
+            GameObject found = null;
+            if (mouseOverInteractive)
+            {
+                found = hit.collider.gameObject;
+            }
+
+            //interact with mouseover - MOUSE2
             if (Input.GetMouseButtonDown(1))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                if(Physics.Raycast(ray, out hit))
+                if (mouseOverInteractive)
                 {
-                    GameObject found = hit.collider.gameObject;
                     if (interaction.ObjectList().Contains(found)) //found item is interactable
                     {
-
-                        Item pickup = found.GetComponent<Item>();
-
-                        if (pickup != null) // interactable is an item
-                        {
-                            int inventorySpace = HasInventorySpace();
-                            if (inventorySpace >= 0) // pick up the item
-                            {
-
-                                inventory[inventorySpace] = found;
-                                GameObject newItem = inventory[inventorySpace];
-                                newItem.transform.parent = this.transform;
-                                newItem.tag = "Untagged";
-                                newItem.SetActive(false);
-                                interaction.RemoveObject(newItem);
-
-                                Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
-
-                                updateInventory();
-                            }
-                            else // no space in inventory
-                            {
-                                Debug.Log("Cannot pick up '" + pickup.Name + "' - you have no room in your inventory!.");
-                                found.GetComponent<Rigidbody>().AddForce(RandomRange(-7f, 7f, true));
-                                found.GetComponent<Rigidbody>().AddTorque(RandomRange(-10f, -10f, false)); //toss it around
-                            }
-
-                        }
-                        else //interactable is not an item
-                        {
-                            found.GetComponent<Interactable>().Interact(this);
-                        }
-
-
+                        interact(found);
                     }
                 }
             }
 
-            //interact item - E
+            //interact with closest object - E
             if (Input.GetKeyDown("e"))
             {
-                if (closestObject == null) // nothing to interact with
+                if (closestObject != null) // nothing to interact with
                 {
-                    Debug.Log("There is no item in interacting distance");
-
-                }
-                else // something to interact with!
-                {
-                    Item pickup = closestObject.GetComponent<Item>();
-
-                    if (pickup != null) // interactable is an item
-                    {
-                        int inventorySpace = HasInventorySpace();
-                        if (inventorySpace >= 0) // pick up the item
-                        {
-
-                            inventory[inventorySpace] = closestObject;
-                            GameObject newItem = inventory[inventorySpace];
-                            newItem.transform.parent = this.transform;
-                            newItem.tag = "Untagged";
-                            newItem.SetActive(false);
-                            interaction.RemoveObject(newItem);
-
-                            Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
-
-                            updateInventory();
-                        }
-                        else // no space in inventory
-                        {
-                            Debug.Log("Cannot pick up '" + pickup.Name + "' - you have no room in your inventory!.");
-                            closestObject.GetComponent<Rigidbody>().AddForce(RandomRange(-7f, 7f, true));
-                            closestObject.GetComponent<Rigidbody>().AddTorque(RandomRange(-10f, -10f, false)); //toss it around
-                        }
-
-                    }
-                    else //interactable is not an item
-                    {
-                        closestObject.GetComponent<Interactable>().Interact(this);
-                    }
+                    interact(closestObject);
                 }
             }
 
+            //update mouse label
+            if (mouseOverInteractive)
+            {
+                mouseLabel.transform.position = found.transform.position + new Vector3(0f, 0.4f, 0f);
+                mouseLabel.transform.rotation = Camera.main.transform.rotation;
+                mouseLabel.GetComponent<TextMesh>().text = found.GetComponent<Interactable>().Name;
+            }
+            else
+            {
+                mouseLabel.GetComponent<TextMesh>().text = "";
+            }
 
+            //update closest interactive label
+            if (closestObject != null)
+            {
+                interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);
+                interactLabel.transform.rotation = Camera.main.transform.rotation;
+                interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Interactable>().Name;
+            }
+            else
+            {
+                interactLabel.GetComponent<TextMesh>().text = "";
+            }
+
+            //show nearby objects - leftAlt
             if (Input.GetKeyDown(KeyCode.LeftAlt))
             {
                 foreach (GameObject o in interaction.ObjectList())
@@ -335,37 +346,6 @@ public class Player : NetworkBehaviour
 
                 showAllLabels = true;
             }
-
-            /*
-            if (showAllLabels)
-            {
-                foreach(GameObject o in interaction.ObjectList())
-                {
-                    if (!interactLabels.Contains(o)) //new object in range without a label
-                    {
-                        GameObject newLabel = Instantiate(textMeshPrefab);
-                        interactLabels.Add(newLabel);
-                        newLabel.GetComponent<TextMesh>().text = o.GetComponent<Item>().Name;
-                        newLabel.transform.position = o.transform.position + new Vector3(0f, 0.4f, 0f);
-                        newLabel.transform.rotation = Camera.main.transform.rotation;
-                        newLabel.transform.parent = o.transform;
-                    }
-
-                }
-                List<GameObject> toRemove = new List<GameObject>(); 
-                foreach (GameObject o in interactLabels)
-                {
-                    if (!interaction.ObjectList().Contains(o)) // object left range
-                    {
-                        toRemove.Add(o);
-                    }
-                }
-                foreach (GameObject o in toRemove)
-                {
-                    interactLabels.Remove(o);
-                    Destroy(o);
-                }
-            }*/
 
             if (Input.GetKeyUp(KeyCode.LeftAlt))
             {
@@ -385,15 +365,8 @@ public class Player : NetworkBehaviour
                 showAllLabels = false;
             }
 
-            // Menu functionality
-            // Remember to change to escape
-            if (Input.GetKeyDown("m"))
-            {
-                menu.SetActive(menuNotActive);
-                menuNotActive = !menuNotActive;
-            }
-
-            if (interactLabels.Count > 0) //update all labels
+            //update nearby labels (from show nearby objects)
+            if (interactLabels.Count > 0)
             {
                 foreach (GameObject o in interactLabels)
                 {
@@ -405,44 +378,49 @@ public class Player : NetworkBehaviour
                 }
             }
 
-            //update closest label
-            if (closestObject != null)
+            // Toggle menu - Escape
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                interactLabel.transform.position = closestObject.transform.position + new Vector3(0f, 0.4f, 0f);
-                interactLabel.transform.rotation = Camera.main.transform.rotation;
-                interactLabel.GetComponent<TextMesh>().text = closestObject.GetComponent<Interactable>().Name;
-            }
-            else
-            {
-                interactLabel.GetComponent<TextMesh>().text = "";
+                playSound("interfaceError");
+                menu.SetActive(menuNotActive);
+                menuNotActive = !menuNotActive;
             }
 
-            // Inventory scroll wheel functionality
+            // Scroll through inventory
             var delta = Input.GetAxis("Mouse ScrollWheel");
-            if (delta > 0f)
+            if (delta != 0f)
             {
-                // Scrolling down goes left in inventory
-                if (inventorySpaceSelected == 0)
+                if (inventory[inventorySpaceSelected] != null)
+                    inventory[inventorySpaceSelected].SetActive(false);
+                playSound("lightTick");
+                if (delta > 0f)
                 {
-                    inventorySpaceSelected = inventory.Length - 1; //loop back to right
-                }
+                    // Scrolling down goes left in inventory
+                    if (inventorySpaceSelected == 0)
+                    {
+                        inventorySpaceSelected = inventory.Length - 1; //loop back to right
+                    }
 
+                    else
+                    {
+                        inventorySpaceSelected = (inventorySpaceSelected - 1) % 5;
+                    }
+                }
                 else
                 {
-                    inventorySpaceSelected = (inventorySpaceSelected - 1) % 5;
+                    // Scrolling up goes right in inventory
+                    inventorySpaceSelected = (inventorySpaceSelected + 1) % 5;
                 }
-            }
-            else if (delta < 0f)
-            {
-                // Scrolling up goes right in inventory
-                inventorySpaceSelected = (inventorySpaceSelected + 1) % 5;
+                if (inventory[inventorySpaceSelected] != null)
+                    inventory[inventorySpaceSelected].SetActive(true);
+
             }
 
             // Highlight selected inventory item
             dashboard.SetActive(true);
             highlightInventorySpace(0.2f, 1f);
-        }
 
+        }
         else
         {
             dashboard.SetActive(false);
@@ -481,6 +459,8 @@ public class Player : NetworkBehaviour
             tempColor.a = (InventoryItemBorders.IndexOf(i) == inventorySpaceSelected) ? selectedAlpha : hiddenAlpha;
             i.color = tempColor;
         }
+
+
     }
 
     private void updateInventory()
@@ -527,6 +507,14 @@ public class Player : NetworkBehaviour
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Hitbox"))
+        {
+
+        }
+    }
+
     void OnGUI()
     {
         // if (isLocalPlayer)
@@ -541,30 +529,55 @@ public class Player : NetworkBehaviour
 
     public void loseHealth(int damage)
     {
-        this.health = (this.health <= damage) ? 0 : this.health - damage;
-        if (this.health == 0) //DIE
+        if (!isDead)
         {
-            Debug.Log("You died.");
+            itemManager.spawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("-" + damage));
+            if (damage >= 10)
+            {
+                playSound("takeDamage");
+            }
+            this.health = (this.health <= damage) ? 0 : this.health - damage;
+            if (this.health == 0) //DIE
+            {
+
+                itemManager.spawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("D E A D"));
+                isDead = true;
+                playSound("playerDeath");
+                Debug.Log("You died.");
+            }
+            updateHealthBar();
         }
-        updateHealthBar();
     }
 
     public void gainHealth(int healing)
     {
-        this.health = (this.health >= this.healthMax - healing) ? this.healthMax : this.health + healing;
-        updateHealthBar();
+        if (!isDead)
+        {
+            if (healing >= 10)
+            {
+                playSound("healDamage");
+            }
+            this.health = (this.health >= this.healthMax - healing) ? this.healthMax : this.health + healing;
+            updateHealthBar();
+        }
     }
 
     public void gainEnergy(int energy)
     {
-        this.energy = (this.energy >= this.energyMax - energy) ? this.energyMax : this.energy + energy;
-        updateEnergyBar();
+        if (!isDead)
+        {
+            this.energy = (this.energy >= this.energyMax - energy) ? this.energyMax : this.energy + energy;
+            updateEnergyBar();
+        }
     }
 
     public void loseEnergy(int energy)
     {
-        this.energy = (this.energy <= energy) ? 0 : this.energy - energy;
-        updateEnergyBar();
+        if (!isDead)
+        {
+            this.energy = (this.energy <= energy) ? 0 : this.energy - energy;
+            updateEnergyBar();
+        }
     }
 
     private void updateHealthBar()
@@ -605,6 +618,11 @@ public class Player : NetworkBehaviour
             this.gainEnergy(5);
             Debug.Log("You are out of energy.");
         }
+    }
+
+    public void playSound(string sound)
+    {
+        itemManager.PlaySound(sound);
     }
 
     public int HasInventorySpace() // returns -1 if there is no empty inventory space, otherwise returns the index of the first empty inventory space.
