@@ -28,17 +28,17 @@ public class Player : NetworkBehaviour
     Vector3 camDiff;
     public GameObject itemContainerPrefab;
     public GameObject textMeshPrefab;
-    public GameObject textMeshName;
     public GameObject interactionRadius;
     private PlayerInteraction interaction;
 
     private GameObject interactLabel;
-    private GameObject playerNameLabel;
 
     public float throwForce = 15.0f;
 
-    // Score functionality
-    // private Controls controls;
+    // Player name
+    public GameObject textMeshName;
+    [SyncVar]
+    public string playerName;
 
     // UI
     public GameObject dashboard;
@@ -87,21 +87,6 @@ public class Player : NetworkBehaviour
         // Grab all players
         players = GameObject.FindGameObjectsWithTag("Player");
 
-        // Name setup
-        playerNameLabel = Instantiate(textMeshName);
-        playerNameLabel.transform.rotation = Camera.main.transform.rotation;
-        if (StaticData.PlayerName != null && StaticData.PlayerName != "")
-        {
-            playerNameLabel.GetComponent<TextMesh>().text = StaticData.PlayerName;
-        }
-
-        else
-        {
-            string randName = "Player ";
-            randName += players.Length.ToString();
-            playerNameLabel.GetComponent<TextMesh>().text = randName;
-        }  
-
         localPlayer = isLocalPlayer;
         EnablePlayer();
         if (isLocalPlayer)
@@ -131,8 +116,21 @@ public class Player : NetworkBehaviour
             // Set current inventory item image
             currInventoryIndex = 0;
 
-            // Set player name position for local player
-            playerNameLabel.transform.position = transform.position + new Vector3(0f, 2f, 0f);
+            // Name setup
+            textMeshName.transform.position = transform.position + new Vector3(0f, 2f, 0f);
+            if (StaticData.PlayerName != null && StaticData.PlayerName != "")
+            {
+                playerName = StaticData.PlayerName;
+                textMeshName.GetComponent<TextMesh>().text = playerName;
+            }
+
+            else
+            {
+                string randName = "Player ";
+                randName += players.Length.ToString();
+                playerName = randName;
+                textMeshName.GetComponent<TextMesh>().text = playerName;
+            }  
         }
 
         else
@@ -145,14 +143,15 @@ public class Player : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+        // Name follow
+        textMeshName.transform.position = transform.position + new Vector3(0f, 2f, 0f);
+        textMeshName.GetComponent<TextMesh>().text = playerName;
+
         localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
             // Camera follow
             Camera.main.transform.position = this.transform.position + camDiff;
-            
-            // Name follow
-            playerNameLabel.transform.position = transform.position + new Vector3(0f, 2f, 0f);
 
             //spawn item - K (axe)
             if (Input.GetKeyDown("k"))
@@ -459,8 +458,9 @@ public class Player : NetworkBehaviour
     }
 
     // Destroy name when player disconnects
-    void OnDisconnectFromServer()
+    void OnPlayerDisconnected()
     {
+        Debug.Log("Player disconnected.");
         Destroy(textMeshName);
     }
 }
