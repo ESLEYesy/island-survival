@@ -52,7 +52,7 @@ public class PlayerAnimation : MonoBehaviour
 
         // Check if underwater
         //rotationRequired = !isUnderwater && transform.position.y < 10;
-        isUnderwater = transform.position.y < 14.4;
+        //isUnderwater = transform.position.y < 14.4;
 
         // Check if jumping
         //isJumpingPressed = Input.GetKey(KeyCode.Space);
@@ -67,14 +67,27 @@ public class PlayerAnimation : MonoBehaviour
         //animator.SetBool("IsWalkingBackwards", isWalkingBackwardsPressed);
 
         // Punching
-        isPunching = Input.GetMouseButtonDown(1);
-        animator.SetBool("IsPunching", isPunching);
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     Debug.Log("Clicked");
+        //     isPunching = true;
+        // }
+        
+        // else
+        // {
+        //     isPunching = false;
+        // }
+
+        // animator.SetBool("IsPunching", isPunching);
+
+        // isSwinging = Input.GetMouseButtonDown(1);
+        // animator.SetBool("IsSwinging", isSwinging);
 
         // Swinging
         //animator.SetBool("IsSwinging", isSwinging);
 
         // Swimming
-        animator.SetBool("IsSwimming", isUnderwater);
+        //animator.SetBool("IsSwimming", isUnderwater);
 
         // Idle swim (treading water)
         //animator.SetBool("IsTreadingWater", isUnderwater);
