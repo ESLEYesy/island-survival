@@ -11,7 +11,8 @@ GameObject:
   - component: {fileID: 4606305320375762}
   - component: {fileID: 33085197010174600}
   - component: {fileID: 23050033702393478}
-  - component: {fileID: 64851373858633676}
+  - component: {fileID: 2278230810712286473}
+  - component: {fileID: 8985132482351851367}
   m_Layer: 0
   m_Name: enchantedforest_tree_1
   m_TagString: Foliage
@@ -81,8 +82,8 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
---- !u!64 &64851373858633676
-MeshCollider:
+--- !u!136 &2278230810712286473
+CapsuleCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -91,7 +92,20 @@ MeshCollider:
   m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_Enabled: 1
-  serializedVersion: 3
-  m_Convex: 1
-  m_CookingOptions: 14
-  m_Mesh: {fileID: 4300000, guid: 58f8f17c237104a4ab96510d93f2c23d, type: 3}
+  m_Radius: 0.98
+  m_Height: 10.990666
+  m_Direction: 1
+  m_Center: {x: -0.02, y: 4.68, z: -0.04}
+--- !u!65 &8985132482351851367
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1706610291850926}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 9.88, y: 5.89, z: 6.4}
+  m_Center: {x: -0.7997241, y: 7.14, z: 0.2670219}

@@ -4,27 +4,34 @@ using UnityEngine;
 
 public class Environment : MonoBehaviour
 {
-	public Terrain islandTerrain;
-	public LayerMask terrainLayer;
-	public static float terrainLeft, terrainRight, terrainTop, terrainBottom, terrainWidth, terrainLength, terrainHeight;
+    public Terrain terrain;
+    public LayerMask terrainLayer;
+    public static float terrainLeft, terrainRight, terrainTop, terrainBottom, terrainWidth, terrainLength, terrainHeight;
 
-	// blp = bottom left peninsula
-	public static float blpLeft, blpRight, blpTop, blpBottom;
+    private TerrainData terrainData;
+    private Vector3 terrainPos;
 
-	// trp = top right peninsula
-	public static float trpLeft, trpRight, trpTop, trpBottom;
+    // blp = bottom left peninsula
+    public static float blpLeft, blpRight, blpTop, blpBottom;
 
-	public static ArrayList units = new ArrayList();
-	public static ArrayList positions = new ArrayList();
-	public static ArrayList rotations = new ArrayList();
+    // trp = top right peninsula
+    public static float trpLeft, trpRight, trpTop, trpBottom;
 
-	// Hierarchy parent to contain instantiated foliage game objects
-	public GameObject foliageContainer;
+    public static ArrayList units = new ArrayList();
+    public static ArrayList positions = new ArrayList();
+    public static ArrayList rotations = new ArrayList();
 
-	public void Awake()
-	{
-		// Main terrain dimensions
-		terrainLeft = islandTerrain.transform.position.x + 110;
+    // Hierarchy parent to contain instantiated foliage game objects
+    public GameObject foliageContainer;
+
+    public void Awake()
+    {
+        terrain = Terrain.activeTerrain;
+        terrainData = terrain.terrainData;
+        terrainPos = terrain.transform.position;
+
+        // Main terrain dimensions
+        /*terrainLeft = islandTerrain.transform.position.x + 110;
 		terrainBottom = islandTerrain.transform.position.z + 250;
 		terrainWidth = islandTerrain.terrainData.size.x;
 		terrainLength = islandTerrain.terrainData.size.z;
@@ -42,37 +49,55 @@ public class Environment : MonoBehaviour
 		trpLeft = terrainRight - 125;
 		trpBottom = terrainTop;
 		trpRight = terrainRight - 25;
-		trpTop = terrainTop + 50;
+		trpTop = terrainTop + 50;*/
 
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 100, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 100, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f);
-		InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 100, 0f);
-		InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f);
-		InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
-		InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f);
-		InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f);
-		InstantiateRandomPosition("Prefabs/island_dirtpile", 100, 0f);
-	}
+        List<int> texturesAllowed = new List<int>();
+        texturesAllowed.Add(2);
 
-	public void InstantiateRandomPosition(string resource, int amount, float addedHeight)
-	{
-		var i = 0;
-		var blpCount = 10;
-		var trpCount = 1;
-		float height = 0;
-		RaycastHit hit;
-		float randPosX, randPosY, randPosZ;
-		Vector3 randPos = Vector3.zero;
-		do 
-		{
-			i++;
-			if (blpCount == 20)
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 400, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 400, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f, texturesAllowed);
+
+        texturesAllowed.Add(0);
+        texturesAllowed.Add(1);
+
+        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 600, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/island_dirtpile", 200, 0f, texturesAllowed);
+
+        texturesAllowed.Remove(2);
+        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 1000, 0f, texturesAllowed);
+
+        
+        //InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
+
+
+
+    }
+
+
+
+    public void InstantiateRandomPosition(string resource, int amount, float addedHeight, List<int> texturesAllowed)
+    {
+        Debug.Log("The index of the terrain texture at 0,0 is: " + GetMainTexture(new Vector3(0f, 0f, 0f)));
+        var i = 0;
+        //var blpCount = 10;
+        //var trpCount = 1;
+        //float height = 0;
+        RaycastHit hit;
+        float randPosX, randPosY, randPosZ;
+        Vector3 randPos = Vector3.zero;
+        do
+        {
+            i++;
+            /*if (blpCount == 20)
 			{
 				randPosX = Random.Range(blpLeft, blpRight);
 				randPosZ = Random.Range(blpBottom, blpTop);
@@ -92,29 +117,90 @@ public class Environment : MonoBehaviour
 			{
 				randPosX = Random.Range(terrainLeft, terrainRight);
 				randPosZ = Random.Range(terrainBottom, terrainTop);
-				blpCount++;
-				trpCount++;
-			}
-			
-			
-			if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity))
-			{
-				if (hit.collider.gameObject.tag == "Foliage")
-				{
-					// If collision, we throw this out and try again
-					i--;
-					//Debug.Log("Collided with foliage!");
-				}
+                blpCount++;
+                trpCount++;
+            }*/
 
-				else
-				{
-					// No collision, we are good to go
-					terrainHeight = hit.point.y;
-					randPosY = terrainHeight + addedHeight;
-					randPos = new Vector3(randPosX, randPosY, randPosZ);
-					Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f,360f),0f), foliageContainer.transform);
-				}
-			}			
-		} while (i < amount);
-	}
+            randPosX = Random.Range(-299, 299);
+            randPosZ = Random.Range(-299, 299);
+
+
+            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity))
+            {
+                /*if (hit.collider.gameObject.tag == "Foliage" || hit.collider.gameObject.tag == "NO-GENERATE")
+                {
+                    // If collision, we throw this out and try again
+                    i--;
+                    //Debug.Log("Collided with foliage!");
+                }*/
+
+                //else
+                //{
+                // No collision, we are good to go
+                int texture = GetMainTexture(new Vector3(randPosX, 0, randPosZ));
+                if (texturesAllowed.Contains(texture) && hit.collider.gameObject.tag != "Foliage") // we got grass
+                {
+                    terrainHeight = hit.point.y;
+                    randPosY = terrainHeight + addedHeight;
+                    randPos = new Vector3(randPosX, randPosY, randPosZ);
+                    Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f, 360f), 0f), foliageContainer.transform);
+                } else
+                {
+                    i--;
+                    Debug.Log("No Gen - Collided with terrain texture " + texture + "!");
+                }
+                //}
+            }
+
+        } while (i < amount);
+    }
+
+    private float[] GetTextureMix(Vector3 WorldPos)
+    {
+        // returns an array containing the relative mix of textures
+        // on the main terrain at this world position.
+
+        // The number of values in the array will equal the number
+        // of textures added to the terrain.
+
+        // calculate which splat map cell the worldPos falls within (ignoring y)
+        int mapX = (int)(((WorldPos.x - terrainPos.x) / terrainData.size.x) * terrainData.alphamapWidth);
+        int mapZ = (int)(((WorldPos.z - terrainPos.z) / terrainData.size.z) * terrainData.alphamapHeight);
+
+        // get the splat data for this cell as a 1x1xN 3d array (where N = number of textures)
+        float[,,] splatmapData = terrainData.GetAlphamaps(mapX, mapZ, 1, 1);
+
+        // extract the 3D array data to a 1D array:
+        float[] cellMix = new float[splatmapData.GetUpperBound(2) + 1];
+
+        for (int n = 0; n < cellMix.Length; n++)
+        {
+            cellMix[n] = splatmapData[0, 0, n];
+        }
+        return cellMix;
+    }
+
+    private int GetMainTexture(Vector3 WorldPos)
+    {
+        // returns the zero-based index of the most dominant texture
+        // on the main terrain at this world position.
+        float[] mix = GetTextureMix(WorldPos);
+
+        float maxMix = 0;
+        int maxIndex = 0;
+
+        // loop through each mix value and find the maximum
+        for (int n = 0; n < mix.Length; n++)
+        {
+            if (mix[n] > maxMix)
+            {
+                maxIndex = n;
+                maxMix = mix[n];
+            }
+        }
+        return maxIndex;
+    }
+
+
+
 }
