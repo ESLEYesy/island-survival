@@ -222,8 +222,58 @@ public class Player : NetworkBehaviour
                 itemManager.UseItem(this, inventory[inventorySpaceSelected].GetComponent<Item>().Name);
             }
 
-            //interact item - E
             GameObject closestObject = interaction.closest;
+
+            
+            //interact item - MOUSE2
+            if (Input.GetMouseButtonDown(1))
+            {
+                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+                RaycastHit hit;
+                if(Physics.Raycast(ray, out hit))
+                {
+                    GameObject found = hit.collider.gameObject;
+                    if (interaction.ObjectList().Contains(found)) //found item is interactable
+                    {
+
+                        Item pickup = found.GetComponent<Item>();
+
+                        if (pickup != null) // interactable is an item
+                        {
+                            int inventorySpace = HasInventorySpace();
+                            if (inventorySpace >= 0) // pick up the item
+                            {
+
+                                inventory[inventorySpace] = found;
+                                GameObject newItem = inventory[inventorySpace];
+                                newItem.transform.parent = this.transform;
+                                newItem.tag = "Untagged";
+                                newItem.SetActive(false);
+                                interaction.RemoveObject(newItem);
+
+                                Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
+
+                                updateInventory();
+                            }
+                            else // no space in inventory
+                            {
+                                Debug.Log("Cannot pick up '" + pickup.Name + "' - you have no room in your inventory!.");
+                                found.GetComponent<Rigidbody>().AddForce(RandomRange(-7f, 7f, true));
+                                found.GetComponent<Rigidbody>().AddTorque(RandomRange(-10f, -10f, false)); //toss it around
+                            }
+
+                        }
+                        else //interactable is not an item
+                        {
+                            found.GetComponent<Interactable>().Interact(this);
+                        }
+
+
+                    }
+                }
+            }
+
+            //interact item - E
             if (Input.GetKeyDown("e"))
             {
                 if (closestObject == null) // nothing to interact with
