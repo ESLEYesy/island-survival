@@ -83,6 +83,10 @@ public class Player : NetworkBehaviour
     public GameObject[] players;
     #endregion
 
+    // Menus
+    public GameObject menu;
+    public bool menuNotActive;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -152,7 +156,9 @@ public class Player : NetworkBehaviour
                 randName += players.Length.ToString();
                 playerName = randName;
                 textMeshName.GetComponent<TextMesh>().text = playerName;
-            }
+            }  
+            // Menu
+            menuNotActive = true;
         }
 
         else
@@ -329,6 +335,14 @@ public class Player : NetworkBehaviour
                 showAllLabels = false;
             }
 
+            // Menu functionality
+            // Remember to change to escape
+            if (Input.GetKeyDown("m"))
+            {
+                menu.SetActive(menuNotActive);
+                menuNotActive = !menuNotActive;
+            }
+
             if (interactLabels.Count > 0) //update all labels
             {
                 foreach (GameObject o in interactLabels)
@@ -398,10 +412,12 @@ public class Player : NetworkBehaviour
             inventory[inventorySpaceSelected] = null;
             Destroy(itemPrefab);
 
+
             Debug.Log("Player " + playerName + " consumed a " + itemPrefab.GetComponent<Item>().Name + ".");
             updateInventory();
 
-        } else
+        }
+        else
         {
             Debug.Log("Error: Player " + playerName + " attempted to consume an item that they don't have equipped");
         }
@@ -419,7 +435,7 @@ public class Player : NetworkBehaviour
 
     private void updateInventory()
     {
-        for(int i = 0; i < inventory.Length; i++)
+        for (int i = 0; i < inventory.Length; i++)
         {
             InventoryItemBacks[i].sprite = itemManager.getSprite((inventory[i] == null) ? null : inventory[i].GetComponent<Item>().Name);
             InventoryItemBacks[i].gameObject.SetActive(InventoryItemBacks[i].sprite != null);
