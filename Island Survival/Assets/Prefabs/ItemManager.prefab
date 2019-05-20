@@ -83,6 +83,8 @@ MonoBehaviour:
   breadSprite: {fileID: 21300000, guid: 735e76a658093d249b7dff289d95c27d, type: 3}
   defaultSprite: {fileID: 0}
   hpParticle: {fileID: 100000, guid: 57ff52a6b9d134c9689be872547ab590, type: 3}
+  explosionParticle: {fileID: 1000013462590818, guid: ecdd96beb7f93494880c052dfccf9dc1,
+    type: 3}
 --- !u!82 &1157469447924937044
 AudioSource:
   m_ObjectHideFlags: 0

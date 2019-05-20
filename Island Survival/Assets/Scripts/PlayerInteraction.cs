@@ -26,14 +26,16 @@ public class PlayerInteraction : MonoBehaviour
 
             foreach (GameObject obj in interactable)
             {
-                float testDist = Vector3.Distance(obj.transform.position, this.transform.position);
-                if (testDist < bestDist)
+                if (obj != null)
                 {
-                    closest = obj;
-                    bestDist = testDist;
-                }                
-                //obj.GetComponent<MeshRenderer>().material = noOutline;
-
+                    float testDist = Vector3.Distance(obj.transform.position, this.transform.position);
+                    if (testDist < bestDist)
+                    {
+                        closest = obj;
+                        bestDist = testDist;
+                    }
+                    //obj.GetComponent<MeshRenderer>().material = noOutline;
+                }
             }
 
             //closest.GetComponent<MeshRenderer>().material = outline;
@@ -73,7 +75,7 @@ public class PlayerInteraction : MonoBehaviour
             interactable.Add(other.gameObject);
 
             Interactable i = other.gameObject.GetComponent<Interactable>();
-            if(i != null)
+            if (i != null)
             {
                 Debug.Log(i.Title + " '" + i.Name + "' is within interacting range.");
             }
@@ -84,9 +86,11 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (other.CompareTag("Interactive"))
         {
-            if (interactable.Contains(other.gameObject)){ 
+            if (interactable.Contains(other.gameObject))
+            {
                 interactable.Remove(other.gameObject);
-            } else
+            }
+            else
             {
                 Debug.Log("Error! We have lost interaction with an object we never were able to interact with");
             }

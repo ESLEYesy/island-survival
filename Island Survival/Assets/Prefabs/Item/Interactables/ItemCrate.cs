@@ -21,7 +21,7 @@ public class ItemCrate : Interactable
 
     public override void Interact(Player user)
     {
-        Debug.Log(user.playerName + " has opened an Item Crate!");
+        Debug.Log((user == null ? "Someone" : user.playerName) + " has opened an Item Crate!");
 
         foreach(GameObject prefab in itemManager.prefabs)
         {
@@ -32,16 +32,31 @@ public class ItemCrate : Interactable
         }
         itemManager.PlaySound("crateOpen");
         this.tag = "Untagged";
-        user.cutInteraction(gameObject);
-
-        //explosion
-        Invoke("Break", 0.05f);
+        itemManager.spawnParticle("smallExplosion");
+        if (user != null)
+        {
+            user.cutInteraction(gameObject);
+            Invoke("Break", 0.05f);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
     }
 
     public void Break()
     {
 
         Destroy(gameObject);
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Hitbox"))
+        {
+            itemManager.PlaySound("hitHard");
+            Interact(null);
+        }
     }
 
 }

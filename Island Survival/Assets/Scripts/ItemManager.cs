@@ -55,6 +55,7 @@ public class ItemManager : MonoBehaviour
 
     //Particles
     public GameObject hpParticle;
+    public GameObject explosionParticle;
 
     void Start()
     {
@@ -84,6 +85,13 @@ public class ItemManager : MonoBehaviour
     public void spawnParticle(string particle)
     {
 
+        switch (particle) {
+            case "smallExplosion":
+                GameObject part = Instantiate(explosionParticle, this.transform.position, this.transform.rotation);
+                part.GetComponent<ParticleSystem>().Play();
+                break;
+        }
+
     }
 
     public void UseItem(Player user, string item)
@@ -103,7 +111,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = true;
                 hbScript.swingDelay = 0.75f;
                 hbScript.hitTime = 0.6f;
-                box.GetComponent<MeshRenderer>().enabled = true;
+                box.GetComponent<MeshRenderer>().enabled = false;
                 Debug.Log(user.playerName + " swung their Mace!");
                 PlaySound("attackSwing");
                 break;
@@ -118,7 +126,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.3f;
-                box.GetComponent<MeshRenderer>().enabled = true;
+                box.GetComponent<MeshRenderer>().enabled = false;
                 Debug.Log(user.playerName + " swung their Machete!");
                 PlaySound("attackSwing");
                 break;
@@ -133,7 +141,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.1f;
-                box.GetComponent<MeshRenderer>().enabled = true;
+                box.GetComponent<MeshRenderer>().enabled = false;
                 Debug.Log(user.playerName + " swung their Shiv!");
                 PlaySound("attackSwing");
                 break;
@@ -148,7 +156,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.2f;
-                box.GetComponent<MeshRenderer>().enabled = true;
+                box.GetComponent<MeshRenderer>().enabled = false;
                 Debug.Log(user.playerName + " swung their Axe!");
                 PlaySound("attackSwing");
                 break;
