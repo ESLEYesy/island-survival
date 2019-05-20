@@ -14,32 +14,28 @@ public class Harvestable : MonoBehaviour
 
     private void Start()
     {
-        
+
     }
 
-    private void OnTriggerEnter(Collider other)
+    public void strike(Hitbox hb)
     {
-        if (other.CompareTag("Hitbox"))
+
+        if (rock)
         {
-            Hitbox hb = other.GetComponent<Hitbox>();
-
-
-            if (rock)
+            if (hb.harvestRocks)
             {
-                if (hb.harvestRocks)
-                {
-                    this.takeHit();
-                }
+                this.takeHit();
             }
-            else if (tree)
+        }
+        else if (tree)
+        {
+            if (hb.harvestTrees)
             {
-                if (hb.harvestTrees)
-                {
-                    this.takeHit();
-                }
+                this.takeHit();
             }
         }
     }
+
 
     private void takeHit()
     {

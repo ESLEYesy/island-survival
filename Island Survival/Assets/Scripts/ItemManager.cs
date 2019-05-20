@@ -96,6 +96,7 @@ public class ItemManager : MonoBehaviour
 
     public void UseItem(Player user, string item)
     {
+        bool visibleHitboxes = false;
         GameObject box;
         Hitbox hbScript;
         switch (item)
@@ -111,7 +112,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = true;
                 hbScript.swingDelay = 0.75f;
                 hbScript.hitTime = 0.6f;
-                box.GetComponent<MeshRenderer>().enabled = false;
+                box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Mace!");
                 PlaySound("attackSwing");
                 break;
@@ -126,7 +127,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.3f;
-                box.GetComponent<MeshRenderer>().enabled = false;
+                box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Machete!");
                 PlaySound("attackSwing");
                 break;
@@ -141,13 +142,13 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.1f;
-                box.GetComponent<MeshRenderer>().enabled = false;
+                box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Shiv!");
                 PlaySound("attackSwing");
                 break;
             case "Axe":
                 //use Axe
-                box = Instantiate(Hitbox, user.transform.position + (user.transform.up * 0.5f) + (user.transform.forward * 1.2f), user.transform.rotation);
+                box = Instantiate(Hitbox, user.transform.position + (user.transform.up * 0.5f) + (user.transform.forward * 1.1f), user.transform.rotation);
                 box.transform.localScale = new Vector3(1f, 1.5f, 1f);
                 box.transform.parent = user.transform;
                 hbScript = box.GetComponent<Hitbox>();
@@ -156,7 +157,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.harvestRocks = false;
                 hbScript.swingDelay = 0f;
                 hbScript.hitTime = 0.2f;
-                box.GetComponent<MeshRenderer>().enabled = false;
+                box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Axe!");
                 PlaySound("attackSwing");
                 break;
