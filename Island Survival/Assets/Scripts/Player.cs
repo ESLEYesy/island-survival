@@ -511,11 +511,17 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private void OnTriggerEnter(Collider other)
+    private void OnTriggerEnter(Collision c)
     {
+        GameObject other = c.gameObject;
         if (other.CompareTag("Hitbox"))
         {
+            Hitbox hb = other.GetComponent<Hitbox>();
+            this.loseHealth(hb.damage);
+            Vector3 dir = c.contacts[0].point - transform.position;
+            dir = -dir.normalized;
 
+            GetComponent<Rigidbody>().AddForce((dir * hb.damage/3) + new Vector3(0, 5f, 0));
         }
     }
 
