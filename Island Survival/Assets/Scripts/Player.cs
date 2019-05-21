@@ -121,7 +121,7 @@ public class Player : NetworkBehaviour
 
             // Set health and energy
             dashboard.transform.position = new Vector3(Screen.width / 2, bottomPadding, 0f);
-
+            dimObject.GetComponent<RectTransform>().sizeDelta = new Vector2(Screen.width, Screen.height);
             //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
             interactLabels = new List<GameObject>();

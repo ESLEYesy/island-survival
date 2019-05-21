@@ -40,6 +40,7 @@ public class ItemManager : MonoBehaviour
 
     //Non-Item Prefabs
     public GameObject itemCratePrefab;
+    public GameObject spawnPoint;
 
     //Hitboxes
     public GameObject Hitbox;

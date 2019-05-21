@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class Environment : MonoBehaviour
 {
+
+    public GameObject itemManager;
+
     public Terrain terrain;
     public LayerMask terrainLayer;
     public static float terrainLeft, terrainRight, terrainTop, terrainBottom, terrainWidth, terrainLength, terrainHeight;
@@ -53,32 +56,35 @@ public class Environment : MonoBehaviour
 
         List<int> texturesAllowed = new List<int>();
         texturesAllowed.Add(2);
-        
-        InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 400, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 400, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f, texturesAllowed);
+
+        InstantiateRandomPosition("Prefabs/enchantedforest_bush_5", 100, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_flower_3", 400, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_flower_5", 400, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/island_bush_1", 100, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/island_bush_palm", 100, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/island_cattail", 100, 0f, texturesAllowed, ~(1 << 4));
 
         texturesAllowed.Add(0);
         texturesAllowed.Add(1);
 
-        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 600, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/island_dirtpile", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 600, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/island_dirtpile", 200, 0f, texturesAllowed, ~(1 << 4));
 
         texturesAllowed.Remove(2);
-        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 1000, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_stone_2", 1000, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/ItemCrateResource", 50, 0f, texturesAllowed, ~(1 << 4));
 
         texturesAllowed.Remove(0);
         texturesAllowed.Remove(1);
         texturesAllowed.Add(2);
 
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f, texturesAllowed);
-        InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f, texturesAllowed);
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_fallen_small", 100, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_stump_2", 100, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_1", 200, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_4", 200, 0f, texturesAllowed, ~(1 << 4));
+        InstantiateRandomPosition("Prefabs/enchantedforest_tree_5", 200, 0f, texturesAllowed, ~(1 << 4));
+
+        InstantiateRandomPosition("Prefabs/SpawnPoint", 10, 0f, new List<int>() { 0, 1 }, ~(0));
 
 
         //InstantiateRandomPosition("Prefabs/island_campfire", 5, 0f);
@@ -89,7 +95,7 @@ public class Environment : MonoBehaviour
 
 
 
-    public void InstantiateRandomPosition(string resource, int amount, float addedHeight, List<int> texturesAllowed)
+    public void InstantiateRandomPosition(string resource, int amount, float addedHeight, List<int> texturesAllowed, int layersChecked)
     {
         //Debug.Log("The index of the terrain texture at 0,0 is: " + GetMainTexture(new Vector3(0f, 0f, 0f)));
         var i = 0;
@@ -130,34 +136,82 @@ public class Environment : MonoBehaviour
             randPosZ = Random.Range(-299, 299);
 
 
-            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity, ~(1<<4)))
+            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity, layersChecked))
             {
-                /*if (hit.collider.gameObject.tag == "Foliage" || hit.collider.gameObject.tag == "NO-GENERATE")
+                if (hit.collider.gameObject.tag != "Terrain")
                 {
-                    // If collision, we throw this out and try again
+                    // Collided with something that isn't terrain.
                     i--;
-                    //Debug.Log("Collided with foliage!");
-                }*/
-
-                //else
-                //{
-                // No collision, we are good to go
-                int texture = GetMainTexture(new Vector3(randPosX, 0, randPosZ));
-                if (texturesAllowed.Contains(texture) && hit.collider.gameObject.tag != "Foliage") // we got grass
-                {
-                    terrainHeight = hit.point.y;
-                    randPosY = terrainHeight + addedHeight;
-                    randPos = new Vector3(randPosX, randPosY, randPosZ);
-                    Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f, 360f), 0f), foliageContainer.transform);
-                } else
-                {
-                    i--;
-                    //Debug.Log("No Gen - Collided with terrain texture " + texture + "!");
                 }
-                //}
+                else //we found terrain
+                {
+                    int texture = GetMainTexture(new Vector3(randPosX, 0, randPosZ));
+                    if (texturesAllowed.Contains(texture))
+                    {
+                        terrainHeight = hit.point.y;
+                        randPosY = terrainHeight + addedHeight;
+                        randPos = new Vector3(randPosX, randPosY, randPosZ);
+                        Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f, 360f), 0f), foliageContainer.transform);
+                    }
+                    else
+                    {
+                        i--; //wrong texture
+                    }
+                }
             }
 
         } while (i < amount);
+    }
+
+    private void InstantiateRandomPositionClustered(string resource, int amount, float addedHeight, List<int> texturesAllowed, int layersChecked, float radius, Vector3 center)
+    {
+        var i = 0;
+        RaycastHit hit;
+        float randPosX, randPosY, randPosZ;
+        Vector3 randPos = Vector3.zero;
+        do
+        {
+            i++;
+            randPosX = Random.Range(center.x - radius, center.x + radius);
+            randPosZ = Random.Range(center.z - radius, center.z + radius);
+            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity, layersChecked))
+            {
+                if (hit.collider.gameObject.tag != "Terrain")
+                {
+                    // Collided with something that isn't terrain.
+                    i--;
+                }
+                else //we found terrain
+                {
+                    int texture = GetMainTexture(new Vector3(randPosX, 0, randPosZ));
+                    if (texturesAllowed.Contains(texture))
+                    {
+                        terrainHeight = hit.point.y;
+                        randPosY = terrainHeight + addedHeight;
+                        randPos = new Vector3(randPosX, randPosY, randPosZ);
+                        Instantiate(Resources.Load(resource, typeof(GameObject)), randPos, Quaternion.Euler(0, Random.Range(0f, 360f), 0f), foliageContainer.transform);
+                        doExtraForResource(resource, new Vector3(randPosX, randPosY, randPosZ));
+                    }
+                    else
+                    {
+                        i--; //wrong texture
+                    }
+                }
+            }
+
+        } while (i < amount);
+    }
+
+    private void doExtraForResource(string res, Vector3 position)
+    {
+        switch (res)
+        {
+            case "Prefabs/SpawnPoint":
+                InstantiateRandomPositionClustered("Prefabs/ItemCrateResource", 3, 0f, new List<int>() { 0, 1, 2 }, ~(1 << 4), 4, position);
+
+
+                break;
+        }
     }
 
     private float[] GetTextureMix(Vector3 WorldPos)

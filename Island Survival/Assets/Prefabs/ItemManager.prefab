@@ -74,6 +74,8 @@ MonoBehaviour:
     type: 3}
   prefabs: []
   itemCratePrefab: {fileID: 153704, guid: a531176fe7f91de408409b80a7582526, type: 3}
+  spawnPoint: {fileID: 5011147293019088481, guid: 3ce81536666b5eb46af37747ea12aee9,
+    type: 3}
   Hitbox: {fileID: 3276517948493478656, guid: 1e1bf49f8581e024aa4579ddefccfc05, type: 3}
   axeSprite: {fileID: 21300000, guid: 18d8677237cb045daab33514bc82200f, type: 3}
   shivSprite: {fileID: 21300000, guid: fdef9bfbe083c634383a02920d514def, type: 3}
