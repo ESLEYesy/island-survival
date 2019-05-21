@@ -27,6 +27,9 @@ public class Sky : MonoBehaviour {
 
     public float skySpeed = 1;
 
+    public float tRange;
+    public float dot;
+    public float i;
 
     Light mainLight;
     Skybox sky;
@@ -42,9 +45,9 @@ public class Sky : MonoBehaviour {
     void Update ()
     {
 
-        float tRange = 1 - minPoint;
-        float dot = Mathf.Clamp01 ((Vector3.Dot (mainLight.transform.forward, Vector3.down) - minPoint) / tRange);
-        float i = ((maxIntensity - minIntensity) * dot) + minIntensity;
+        tRange = 1 - minPoint;
+        dot = Mathf.Clamp01 ((Vector3.Dot (mainLight.transform.forward, Vector3.down) - minPoint) / tRange);
+        i = ((maxIntensity - minIntensity) * dot) + minIntensity;
 
         mainLight.intensity = i;
 

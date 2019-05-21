@@ -100,6 +100,13 @@ public class Player : NetworkBehaviour
         // Get network manager
         networkManager = GameObject.FindGameObjectsWithTag("NetworkManager")[0];
 
+        isDead = false;
+        health = healthMax = energy = energyMax = 100;
+        jumpCost = 5;
+        animator = gameObject.GetComponent<Animator>();
+        // Update health and energy every second
+        InvokeRepeating("UpdateEnergy", 1f, 1f);
+
         localPlayer = isLocalPlayer;
         EnablePlayer();
         if (isLocalPlayer)
@@ -111,12 +118,6 @@ public class Player : NetworkBehaviour
             //controls = GameObject.FindObjectOfType<Controls>();
 
             // Set health and energy
-            isDead = false;
-            health = healthMax = energy = energyMax = 100;
-            jumpCost = 5;
-
-            animator = gameObject.GetComponent<Animator>();
-
             dashboard.transform.position = new Vector3(Screen.width / 2, bottomPadding, 0f);
 
             //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
@@ -125,10 +126,7 @@ public class Player : NetworkBehaviour
             interactLabel = Instantiate(textMeshPrefab);
             mouseLabel = Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
-
-            // Update health and energy every second
-            InvokeRepeating("UpdateEnergy", 1f, 1f);
-
+            
             // Set current inventory item image
             inventorySpaceSelected = 0;
             showAllLabels = false;
@@ -193,7 +191,7 @@ public class Player : NetworkBehaviour
             int inventorySpace = HasInventorySpace();
             if (inventorySpace >= 0) // pick up the item
             {
-
+                
                 inventory[inventorySpace] = obj;
                 GameObject newItem = inventory[inventorySpace];
                 newItem.transform.position = itemMountPoint.transform.position;
@@ -202,7 +200,10 @@ public class Player : NetworkBehaviour
                 newItem.tag = "Untagged";
                 newItem.GetComponent<Rigidbody>().isKinematic = true;
                 newItem.GetComponent<Collider>().enabled = false;
-                newItem.SetActive(false);
+                if (inventorySpace != inventorySpaceSelected)
+                {
+                    newItem.SetActive(false);
+                }
                 interaction.RemoveObject(newItem);
 
                 Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
@@ -232,81 +233,81 @@ public class Player : NetworkBehaviour
         textMeshName.transform.position = transform.position + new Vector3(0f, 2f, 0f);
         textMeshName.GetComponent<TextMesh>().text = playerName;
 
+        //spawn custom item - K
+        if (Input.GetKeyDown("k"))
+        {
+            GameObject spawnItem = Instantiate(itemManager.itemCratePrefab, this.itemSpawnPoint.transform.position, itemSpawnPoint.transform.rotation);
+            Debug.Log("Spawned '" + spawnItem.GetComponent<Interactable>().Name + "'!");
+            spawnItem.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
+            spawnItem.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
+            playSound("itemDrop");
+        }
+
+        //drop selected item - X
+        if (inventory[inventorySpaceSelected] != null && Input.GetKeyDown("x"))
+        {
+            GameObject itemPrefab = inventory[inventorySpaceSelected];
+            itemPrefab.transform.parent = null;
+            itemPrefab.transform.position = this.itemSpawnPoint.transform.position;
+            itemPrefab.transform.rotation = this.itemSpawnPoint.transform.rotation;
+            itemPrefab.tag = "Interactive";
+            inventory[inventorySpaceSelected] = null;
+            itemPrefab.GetComponent<Rigidbody>().isKinematic = false;
+            itemPrefab.GetComponent<Collider>().enabled = true;
+            itemPrefab.SetActive(true);
+
+            Debug.Log("Dropped a " + itemPrefab.GetComponent<Item>().Name + ".");
+            playSound("itemDrop");
+
+            itemPrefab.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
+            itemPrefab.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
+
+            updateInventory();
+        }
+
+        //use selected item - MOUSE1
+        if (inventory[inventorySpaceSelected] != null && Input.GetMouseButtonDown(0))
+        {
+            itemManager.UseItem(this, inventory[inventorySpaceSelected].GetComponent<Item>().Name);
+        }
+
+        GameObject closestObject = interaction.closest;
+
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        bool mouseOverInteractive = Physics.Raycast(ray, out hit, 500f, (1 << 8));
+        GameObject found = null;
+        if (mouseOverInteractive)
+        {
+            found = hit.collider.gameObject;
+        }
+
+        //interact with mouseover - MOUSE2
+        if (Input.GetMouseButtonDown(1))
+        {
+            if (mouseOverInteractive)
+            {
+                if (interaction.ObjectList().Contains(found)) //found item is interactable
+                {
+                    interact(found);
+                }
+            }
+        }
+
+        //interact with closest object - E
+        if (Input.GetKeyDown("e"))
+        {
+            if (closestObject != null) // nothing to interact with
+            {
+                interact(closestObject);
+            }
+        }
+
         localPlayer = isLocalPlayer;
         if (isLocalPlayer)
         {
             //Camera follow
             Camera.main.transform.position = this.transform.position + camDiff;
-
-            //spawn custom item - K
-            if (Input.GetKeyDown("k"))
-            {
-                GameObject spawnItem = Instantiate(itemManager.itemCratePrefab, this.itemSpawnPoint.transform.position, itemSpawnPoint.transform.rotation);
-                Debug.Log("Spawned '" + spawnItem.GetComponent<Interactable>().Name + "'!");
-                spawnItem.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                spawnItem.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
-                playSound("itemDrop");
-            }
-
-            //drop selected item - X
-            if (inventory[inventorySpaceSelected] != null && Input.GetKeyDown("x"))
-            {
-                GameObject itemPrefab = inventory[inventorySpaceSelected];
-                itemPrefab.transform.parent = null;
-                itemPrefab.transform.position = this.itemSpawnPoint.transform.position;
-                itemPrefab.transform.rotation = this.itemSpawnPoint.transform.rotation;
-                itemPrefab.tag = "Interactive";
-                inventory[inventorySpaceSelected] = null;
-                itemPrefab.GetComponent<Rigidbody>().isKinematic = false;
-                itemPrefab.GetComponent<Collider>().enabled = true;
-                itemPrefab.SetActive(true);
-
-                Debug.Log("Dropped a " + itemPrefab.GetComponent<Item>().Name + ".");
-                playSound("itemDrop");
-
-                itemPrefab.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                itemPrefab.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
-
-                updateInventory();
-            }
-
-            //use selected item - MOUSE1
-            if (inventory[inventorySpaceSelected] != null && Input.GetMouseButtonDown(0))
-            {
-                itemManager.UseItem(this, inventory[inventorySpaceSelected].GetComponent<Item>().Name);
-            }
-
-            GameObject closestObject = interaction.closest;
-
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            bool mouseOverInteractive = Physics.Raycast(ray, out hit, 500f, (1 << 8));
-            GameObject found = null;
-            if (mouseOverInteractive)
-            {
-                found = hit.collider.gameObject;
-            }
-
-            //interact with mouseover - MOUSE2
-            if (Input.GetMouseButtonDown(1))
-            {
-                if (mouseOverInteractive)
-                {
-                    if (interaction.ObjectList().Contains(found)) //found item is interactable
-                    {
-                        interact(found);
-                    }
-                }
-            }
-
-            //interact with closest object - E
-            if (Input.GetKeyDown("e"))
-            {
-                if (closestObject != null) // nothing to interact with
-                {
-                    interact(closestObject);
-                }
-            }
 
             //update mouse label
             if (mouseOverInteractive)
@@ -463,8 +464,6 @@ public class Player : NetworkBehaviour
             tempColor.a = (InventoryItemBorders.IndexOf(i) == inventorySpaceSelected) ? selectedAlpha : hiddenAlpha;
             i.color = tempColor;
         }
-
-
     }
 
     private void updateInventory()

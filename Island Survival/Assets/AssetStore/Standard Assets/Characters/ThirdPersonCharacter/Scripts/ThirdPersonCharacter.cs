@@ -42,6 +42,11 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             m_OrigGroundCheckDistance = m_GroundCheckDistance;
         }
 
+        public void SetGravityMultiplier(float f)
+        {
+            m_GravityMultiplier = f;
+        }
+
 
         public void Move(Vector3 move, bool crouch, bool jump)
         {
@@ -59,7 +64,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             ApplyExtraTurnRotation();
 
             // control and velocity handling is different when grounded and airborne:
-            if (m_IsGrounded)
+            if (m_IsGrounded || (jump && gameObject.GetComponent<Underwater>().isUnderwater))
             {
                 HandleGroundedMovement(crouch, jump);
             }
@@ -166,12 +171,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         void HandleGroundedMovement(bool crouch, bool jump)
         {
             // check whether conditions are right to allow a jump:
-            if (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded"))
+            if ((jump && gameObject.GetComponent<Underwater>().isUnderwater) || (jump && !crouch && m_Animator.GetCurrentAnimatorStateInfo(0).IsName("Grounded")))
             {
                 if (gameObject.GetComponent<Player>().energy >= gameObject.GetComponent<Player>().jumpCost) ////CUSTOM !!!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<
                 {
+                    Debug.Log("Jump Succeeded!");
                     // jump!
-                    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z);
+                    m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z) + (gameObject.transform.forward);
                     m_IsGrounded = false;
                     m_Animator.applyRootMotion = false;
                     m_GroundCheckDistance = 0.1f;

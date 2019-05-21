@@ -1710,7 +1710,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1309190920}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.52, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 186604177}
@@ -1829,7 +1829,7 @@ MonoBehaviour:
   m_MovingTurnSpeed: 360
   m_StationaryTurnSpeed: 180
   m_JumpPower: 6
-  m_GravityMultiplier: 2
+  m_GravityMultiplier: 1.5
   m_RunCycleLegOffset: 0.2
   m_MoveSpeedMultiplier: 1.25
   m_AnimSpeedMultiplier: 1.25
@@ -1973,10 +1973,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 06f7520d2f6bd4416a6bcb365eeb2f45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterLevel: 14.4
   isUnderwater: 0
   player: {fileID: 4899426128446916309}
   airLabel: {fileID: 7332670960090206558}
+  controller: {fileID: 0}
   bubble001: {fileID: 4479579681713677326}
   bubble002: {fileID: 5995473428160552563}
   bubble003: {fileID: 6319434019532637862}
@@ -8027,12 +8027,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 489cc4f45eec12140b67d01fd1c598ff, type: 3}
---- !u!4 &5850321661383404339 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4116589238578036476, guid: 489cc4f45eec12140b67d01fd1c598ff,
-    type: 3}
-  m_PrefabInstance: {fileID: 7498938218245805519}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &4680808887668868659 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 2946487160919479292, guid: 489cc4f45eec12140b67d01fd1c598ff,
@@ -8054,6 +8048,12 @@ AudioSource:
 --- !u!82 &4363526781708979213 stripped
 AudioSource:
   m_CorrespondingSourceObject: {fileID: 6097813324551854530, guid: 489cc4f45eec12140b67d01fd1c598ff,
+    type: 3}
+  m_PrefabInstance: {fileID: 7498938218245805519}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &5850321661383404339 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4116589238578036476, guid: 489cc4f45eec12140b67d01fd1c598ff,
     type: 3}
   m_PrefabInstance: {fileID: 7498938218245805519}
   m_PrefabAsset: {fileID: 0}

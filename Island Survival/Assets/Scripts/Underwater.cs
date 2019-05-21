@@ -3,11 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityStandardAssets.Characters.ThirdPerson;
 
 public class Underwater : MonoBehaviour
 {
     // Water details
-    public float waterLevel;
+    private float waterLevel;
+    private GameObject waterObject;
+
     public bool isUnderwater;
     private Color normalColor;
     private Color underwaterColor;
@@ -31,6 +34,16 @@ public class Underwater : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+
+        //set Water Object
+        RaycastHit hit;
+        if (Physics.Raycast(new Vector3(400, 400, 400), Vector3.down, out hit, 500f, (1 << 4)))
+        {
+            waterObject = hit.collider.gameObject;
+            waterLevel = waterObject.transform.position.y - 1.4f;
+        }
+
+
 
         // Initialize color for fog
         normalColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
@@ -79,6 +92,7 @@ public class Underwater : MonoBehaviour
     {
         if (player.localPlayer)
         {
+            waterLevel = waterObject.transform.position.y - 1.4f;
             double playerLevel = Math.Round((double)(new decimal(transform.position.y)), 2); //round to 2 decimal positions
 
             if (playerLevel <= waterLevel) // Player is underwater
@@ -86,6 +100,8 @@ public class Underwater : MonoBehaviour
                 if (!isUnderwater) // Player doesn't know they're underwater yet, so start underwater activities
                 {
                     isUnderwater = true;
+                    player.GetComponent<ThirdPersonCharacter>().SetGravityMultiplier(0.2f);
+                    player.GetComponent<Rigidbody>().drag = 1f;
 
                     CancelInvoke("GainBubble");
                     InvokeRepeating("LoseBubble", 1f, 1f);
@@ -113,6 +129,8 @@ public class Underwater : MonoBehaviour
                 {
                     drowning = false; //stop drowning
                     isUnderwater = false;
+                    player.GetComponent<ThirdPersonCharacter>().SetGravityMultiplier(1.5f);
+                    player.GetComponent<Rigidbody>().drag = 0f;
 
                     CancelInvoke("Drowning"); //stop taking damage\
                     CancelInvoke("LoseBubble");

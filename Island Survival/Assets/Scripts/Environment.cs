@@ -130,7 +130,7 @@ public class Environment : MonoBehaviour
             randPosZ = Random.Range(-299, 299);
 
 
-            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity))
+            if (Physics.Raycast(new Vector3(randPosX, 9999f, randPosZ), Vector3.down, out hit, Mathf.Infinity, ~(1<<4)))
             {
                 /*if (hit.collider.gameObject.tag == "Foliage" || hit.collider.gameObject.tag == "NO-GENERATE")
                 {

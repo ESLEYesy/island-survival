@@ -148,7 +148,7 @@ public class ItemManager : MonoBehaviour
                 break;
             case "Axe":
                 //use Axe
-                box = Instantiate(Hitbox, user.transform.position + (user.transform.up * 0.5f) + (user.transform.forward * 1.1f), user.transform.rotation);
+                box = Instantiate(Hitbox, user.transform.position + (user.transform.up * 0.5f) + (user.transform.forward * 1.3f), user.transform.rotation);
                 box.transform.localScale = new Vector3(1f, 1.5f, 1f);
                 box.transform.parent = user.transform;
                 hbScript = box.GetComponent<Hitbox>();
