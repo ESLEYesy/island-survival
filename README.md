@@ -7,7 +7,7 @@ Party style multiplayer game where players find themselves stranded on an island
 * [Design Proposal](https://docs.google.com/document/d/1FbOPVJZX48hTGNqMe2t2qABzeU3WrOENPi5IwCZKWS8/edit?usp=sharing)
 * [Development Plan](https://docs.google.com/document/d/1cYW2h4LI9lb3jBuvk7qQCOwTIMJvxaB6uxrvRUetLIQ/edit?usp=sharing)
 * [Final Report](https://docs.google.com/document/d/1qLuaMYSbONd8VocSIJNz_nw4nASRPII6tBdXTEZy5wU/edit?usp=sharing)
-* [Demo Video](https://youtube.com)
+* [Demo Video](https://www.youtube.com/watch?v=HdBRKA_JQ2Y)
 * [References](https://docs.google.com/document/d/1fBh3ZiYylDtKzmZ6vewPdSX88F9IzSUO_zj3Cu2VF6I/edit?usp=sharing)
 
 ## Builds
@@ -23,32 +23,30 @@ Party style multiplayer game where players find themselves stranded on an island
 - [x] Create menu
 - [x] Add networking for multiplayer
 - [x] Create multiplayer lobby UI
-- [ ] Test ability to create and join games across networks
 - [x] Add name above player
 - [ ] Implement a chat
-- [ ] Create in game lobby for when game is joined
+- [x] Create in game lobby for when game is joined
 
 ## Environment tasks
 - [x] Create island terrain for a small start map
 - [x] Add sand layer underwater
 - [x] Add day/night cycle
-- [ ] Add trees, rocks, wood, etc. to environment.
+- [x] Add trees, rocks, wood, etc. to environment.
 
 ## Player tasks
 - [x] Create player with basic motion
-- [ ] Add swimming animations
-- [ ] Add fighting animations
-- [ ] Create player menus
-- [ ] Add health bar
-- [ ] Add air bubbles
+- [x] Create player menus
+- [x] Add health bar
+- [x] Add air bubbles
 - [x] Add energy bar
-- [ ] Add inventory
+- [x] Add inventory
 
 ## Bugs
 - [x] Non local player animations not working
 - [x] Camera does not follow local player
 - [x] Players can't move backwards (glitchy)
 - [x] Camera always slightly moving
+- [ ] Animations are funky
 
 ## Credits
 * [Mirror](https://assetstore.unity.com/packages/tools/network/mirror-129321)
