@@ -86,13 +86,20 @@ public class Player : NetworkBehaviour
 
     // Array to store all players
     public GameObject[] players;
-    #endregion
+    
 
     // Menus
     public GameObject menu;
     public bool menuNotActive;
     public GameObject settingsMenu;
     public GameObject networkManager;
+
+    // Sound
+    public AudioSource voiceSound;
+    public AudioSource actionSound;
+    public AudioSource uiSound;
+
+    #endregion
 
     // Start is called before the first frame update
     void Start()
@@ -101,6 +108,7 @@ public class Player : NetworkBehaviour
         players = GameObject.FindGameObjectsWithTag("Player");
         // Get network manager
         networkManager = GameObject.FindGameObjectsWithTag("NetworkManager")[0];
+        itemManager = Camera.main.transform.GetChild(3).gameObject.GetComponent<ItemManager>();
 
         isDead = false;
         health = healthMax = energy = energyMax = 100;
@@ -113,6 +121,7 @@ public class Player : NetworkBehaviour
         EnablePlayer();
         if (isLocalPlayer)
         {
+            uiSound = Camera.main.transform.GetChild(2).GetComponent<AudioSource>();
             Camera.main.transform.position = this.transform.position - this.transform.forward * 6 + this.transform.up * 6 + this.transform.right * 4;
             Camera.main.transform.LookAt(this.transform.position);
             camDiff = Camera.main.transform.position - this.transform.position;
@@ -125,8 +134,8 @@ public class Player : NetworkBehaviour
             //GetComponent<NetworkAnimator>().SetParameterAutoSend(0,true);
 
             interactLabels = new List<GameObject>();
-            interactLabel = Instantiate(textMeshPrefab);
-            mouseLabel = Instantiate(textMeshPrefab);
+            interactLabel = GameObject.Instantiate(textMeshPrefab);
+            mouseLabel = GameObject.Instantiate(textMeshPrefab);
             interaction = interactionRadius.GetComponent<PlayerInteraction>();
 
             // Set current inventory item image
@@ -177,13 +186,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    private Vector3 RandomRange(float min, float max, bool upwardsBias)
-    {
-        return new Vector3(UnityEngine.Random.Range(min, max),
-            (upwardsBias ? Math.Abs(UnityEngine.Random.Range(min, max) * (upwardsBias ? 3f : 1f)) : UnityEngine.Random.Range(min, max) * (upwardsBias ? 3f : 1f)),
-            UnityEngine.Random.Range(min, max));
-    }
-
     private void interact(GameObject obj)
     {
         Item pickup = obj.GetComponent<Item>();
@@ -209,16 +211,15 @@ public class Player : NetworkBehaviour
                 interaction.RemoveObject(newItem);
 
                 Debug.Log(this.playerName + " has picked up '" + pickup.Name + "'!");
-                playSound("itemPickup");
-
+                PlaySound("itemPickup", "ui");
+                
                 updateInventory();
             }
             else // no space in inventory
             {
-                Debug.Log("Cannot pick up '" + pickup.Name + "' - you have no room in your inventory!.");
-                obj.GetComponent<Rigidbody>().AddForce(RandomRange(-7f, 7f, true));
-                obj.GetComponent<Rigidbody>().AddTorque(RandomRange(-10f, -10f, false)); //toss it around
-                playSound("interfaceError");
+                obj.GetComponent<Rigidbody>().AddForce(itemManager.RandomRange(-7f, 7f, true));
+                obj.GetComponent<Rigidbody>().AddTorque(itemManager.RandomRange(-15f, 15f, false)); //toss it around
+                PlaySound("interfaceError", "ui");
             }
 
         }
@@ -228,7 +229,6 @@ public class Player : NetworkBehaviour
         }
     }
 
-    // Update is called once per frame
     void Update()
     {
         // Name follow
@@ -240,11 +240,9 @@ public class Player : NetworkBehaviour
             //spawn custom item - K
             if (Input.GetKeyDown("k"))
             {
-                GameObject spawnItem = Instantiate(itemManager.itemCratePrefab, this.itemSpawnPoint.transform.position, itemSpawnPoint.transform.rotation);
-                Debug.Log("Spawned '" + spawnItem.GetComponent<Interactable>().Name + "'!");
-                spawnItem.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                spawnItem.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
-                playSound("itemDrop");
+                itemManager.SpawnItem(itemManager.GetItem("ItemCrate"), transform.position + transform.forward * 2 + transform.up * 2, UnityEngine.Random.rotation, this.transform.forward * throwForce, itemManager.RandomRange(-15f, 15f, false));
+                PlaySound("itemDrop", "action");
+                Debug.Log("Spawned an item crate !");
             }
 
             //drop selected item - X
@@ -261,10 +259,10 @@ public class Player : NetworkBehaviour
                 itemPrefab.SetActive(true);
 
                 Debug.Log("Dropped a " + itemPrefab.GetComponent<Item>().Name + ".");
-                playSound("itemDrop");
+                PlaySound("itemDrop");
 
                 itemPrefab.GetComponent<Rigidbody>().AddForce(this.transform.forward * throwForce);
-                itemPrefab.GetComponent<Rigidbody>().AddTorque(RandomRange(-15f, 15f, false));
+                itemPrefab.GetComponent<Rigidbody>().AddTorque(itemManager.RandomRange(-15f, 15f, false));
 
                 updateInventory();
             }
@@ -390,7 +388,7 @@ public class Player : NetworkBehaviour
                 // Toggle menu - Escape
                 if (Input.GetKeyDown(KeyCode.Escape))
                 {
-                    playSound("interfaceError");
+                    PlaySound("interfaceError");
                     menu.SetActive(menuNotActive);
                     menuNotActive = !menuNotActive;
                 }
@@ -401,7 +399,7 @@ public class Player : NetworkBehaviour
                 {
                     if (inventory[inventorySpaceSelected] != null)
                         inventory[inventorySpaceSelected].SetActive(false);
-                    playSound("lightTick");
+                    PlaySound("lightTick");
                     if (delta > 0f)
                     {
                         // Scrolling down goes left in inventory
@@ -480,7 +478,7 @@ public class Player : NetworkBehaviour
     {
         for (int i = 0; i < inventory.Length; i++)
         {
-            InventoryItemBacks[i].sprite = itemManager.getSprite((inventory[i] == null) ? null : inventory[i].GetComponent<Item>().Name);
+            InventoryItemBacks[i].sprite = itemManager.GetSprite((inventory[i] == null) ? null : inventory[i].GetComponent<Item>().Name);
             InventoryItemBacks[i].gameObject.SetActive(InventoryItemBacks[i].sprite != null);
         }
     }
@@ -532,17 +530,17 @@ public class Player : NetworkBehaviour
         // }
     }
 
-    public void die()
+    public void Die()
     {
         if (!isDead)
         {
             this.health = 0;
-            updateHealthBar();
+            UpdateHealthBar();
 
             Debug.Log(playerName + " died.");
-            itemManager.spawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("D E A D"));
+            itemManager.SpawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("D E A D"));
             isDead = true;
-            playSound("playerDeath");
+            PlaySound("playerDeath", "voice");
 
             deathOverlay.SetActive(true);
             dimObject.SetActive(true);
@@ -550,101 +548,109 @@ public class Player : NetworkBehaviour
         }
     }
 
-    public void loseHealth(int damage)
+    public void LoseHealth(int damage)
     {
         if (!isDead)
         {
-            itemManager.spawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("-" + damage));
+            itemManager.SpawnParticle("HPParticle", transform.position + new Vector3(0f, 3f, 0f), ("-" + damage));
             if (damage >= 10)
             {
-                playSound("takeDamage");
+                PlaySound("takeDamage", "voice");
             }
             this.health = (this.health <= damage) ? 0 : this.health - damage;
             if (this.health == 0) //DIE
             {
-                die();
+                Die();
             }
-            updateHealthBar();
+            UpdateHealthBar();
         }
     }
 
-    public void gainHealth(int healing)
+    public void GainHealth(int healing)
     {
         if (!isDead)
         {
             if (healing >= 10)
             {
-                playSound("healDamage");
+                PlaySound("healDamage");
             }
             this.health = (this.health >= this.healthMax - healing) ? this.healthMax : this.health + healing;
-            updateHealthBar();
+            UpdateHealthBar();
         }
     }
 
-    public void gainEnergy(int energy)
+    public void GainEnergy(int energy)
     {
         if (!isDead)
         {
             this.energy = (this.energy >= this.energyMax - energy) ? this.energyMax : this.energy + energy;
-            updateEnergyBar();
+            UpdateEnergyBar();
         }
     }
 
-    public void loseEnergy(int energy)
+    public void LoseEnergy(int energy)
     {
         if (!isDead)
         {
             this.energy = (this.energy <= energy) ? 0 : this.energy - energy;
-            updateEnergyBar();
+            UpdateEnergyBar();
         }
     }
 
-    private void updateHealthBar()
+    private void UpdateHealthBar()
     {
         healthBar.rectTransform.localScale = new Vector3(health / healthMax, 1f, 1f);
     }
 
-    private void updateEnergyBar()
+    private void UpdateEnergyBar()
     {
         energyBar.rectTransform.localScale = new Vector3(energy / energyMax, 1f, 1f);
     }
 
-    private void UpdateEnergy() // called every second
+    private void UpdateEnergy()
     {
         if (energy == energyMax)
         {
-            this.gainHealth(1); // heal 3 health when full on energy.
+            this.GainHealth(1); // heal 3 health when full on energy.
         }
 
         if (energy > 0) // we have energy to spend
         {
             if (animator.GetCurrentAnimatorClipInfo(0)[0].clip.name == "HumanoidWalk") // Player loses 2 energy while walking/running
             {
-                this.loseEnergy(2);
-            }
-            else if (false) // Player loses energy when fighting, etc.
+                this.LoseEnergy(2);
+            }else // If player does nothing to lose energy, they gain energy back.
             {
-                // Implement later on
-            }
-            else // If player does nothing to lose energy, they gain energy back.
-            {
-                gainEnergy(5);
+                GainEnergy(5);
             }
         }
         else
         {
-            this.loseHealth(1);
-            this.gainEnergy(5);
+            this.LoseHealth(1);
+            this.GainEnergy(5);
             Debug.Log("You are out of energy.");
         }
     }
 
-    public void playSound(string sound)
+    public void PlaySound(string sound)
     {
-        itemManager.PlaySound(sound);
+        PlaySound(sound, "ui");
     }
 
-    public int HasInventorySpace() // returns -1 if there is no empty inventory space, otherwise returns the index of the first empty inventory space.
+    public void PlaySound(string sound, string target)
+    {
+        AudioSource source = uiSound;
+        if(target == "action")
+        {
+            source = actionSound;
+        } else if (target == "voice")
+        {
+            source = voiceSound;
+        }
+        itemManager.PlaySound(sound, source);
+    }
+
+    public int HasInventorySpace() //returns -1 if there is no empty inventory space, otherwise returns the index of the first empty inventory space.
     {
         for (int i = 0; i < inventory.Length; i++)
         {

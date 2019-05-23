@@ -33,7 +33,7 @@ public class InventoryUI : MonoBehaviour
         maxInventoryWidth = (int)(Screen.width * 0.5f);
         maxInventoryHeight = (int)(Screen.height * 0.5f);
 
-        InitUi(new GameObject[4, 3]);
+        //InitUi(new GameObject[4, 3]);
     }
 
     public void InitUi(GameObject[,] inventory)
@@ -80,7 +80,7 @@ public class InventoryUI : MonoBehaviour
         {
             for(int x = 0; x <= numHorizontalCells - 1; x++) //row
             {
-                GameObject newSpace = Instantiate(inventorySpacePrefab); //create new space
+                GameObject newSpace = GameObject.Instantiate(inventorySpacePrefab); //create new space
                 newSpace.transform.SetParent(inventoryWindow.transform); //add to parent
                 newSpace.GetComponent<RectTransform>().localPosition = new Vector2(currentX, currentY); //align with space under parent
                 newSpace.GetComponent<RectTransform>().sizeDelta = new Vector2(cellDimension, cellDimension);

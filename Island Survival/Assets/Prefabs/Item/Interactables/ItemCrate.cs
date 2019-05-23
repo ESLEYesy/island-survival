@@ -5,11 +5,17 @@ using UnityEngine;
 public class ItemCrate : Interactable
 {
 
-    public ItemManager itemManager;
+    ItemManager itemManager;
+
+    public void Start()
+    {
+        itemManager = Camera.main.transform.GetChild(3).gameObject.GetComponent<ItemManager>();
+    }
 
     public ItemCrate() : base()
     {
         Name = "Item Crate";
+        
     }
 
     private Vector3 RandomRange(float min, float max, bool upwardsBias)
@@ -25,28 +31,25 @@ public class ItemCrate : Interactable
 
         foreach(GameObject prefab in itemManager.prefabs)
         {
-            GameObject spawnItem = Instantiate(prefab, this.transform.position + RandomRange(-0.5f, 0.5f, true), this.transform.rotation);
-            Debug.Log("Item Crate spawned '" + prefab.GetComponent<Item>().Name + "'!");
-            spawnItem.GetComponent<Rigidbody>().AddForce(RandomRange(-8f, 8f, true));
-            spawnItem.GetComponent<Rigidbody>().AddTorque(RandomRange(-20f, 20f, false));
+            itemManager.LaunchItem(prefab, transform.position + transform.up, Random.rotation);
         }
-        itemManager.PlaySound("crateOpen");
+        itemManager.PlaySound("crateOpen", gameObject.GetComponent<AudioSource>());
         this.tag = "Untagged";
-        itemManager.spawnParticle("smallExplosion");
+        itemManager.SpawnParticle("smallExplosion");
         if (user != null)
         {
             user.cutInteraction(gameObject);
-            Invoke("Break", 0.05f);
+            gameObject.SetActive(false);
+            Invoke("Break", 1f);
         }
         else
         {
-            Destroy(gameObject);
+            Break();
         }
     }
 
     public void Break()
     {
-
         Destroy(gameObject);
     }
 
@@ -54,7 +57,7 @@ public class ItemCrate : Interactable
     {
         if (other.CompareTag("Hitbox"))
         {
-            itemManager.PlaySound("hitHard");
+            itemManager.PlaySound("hitHard", gameObject.GetComponent<AudioSource>());
             Interact(null);
         }
     }

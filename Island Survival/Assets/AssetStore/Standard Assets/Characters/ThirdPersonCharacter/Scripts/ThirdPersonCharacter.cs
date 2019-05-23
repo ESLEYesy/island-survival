@@ -175,13 +175,13 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 if (gameObject.GetComponent<Player>().energy >= gameObject.GetComponent<Player>().jumpCost) ////CUSTOM !!!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<
                 {
-                    Debug.Log("Jump Succeeded!");
+                    
                     // jump!
                     m_Rigidbody.velocity = new Vector3(m_Rigidbody.velocity.x, m_JumpPower, m_Rigidbody.velocity.z) + (gameObject.transform.forward);
                     m_IsGrounded = false;
                     m_Animator.applyRootMotion = false;
                     m_GroundCheckDistance = 0.1f;
-                    gameObject.GetComponent<Player>().loseEnergy(5); ////CUSTOM !!!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<
+                    gameObject.GetComponent<Player>().LoseEnergy(5); ////CUSTOM !!!!!!!!!!!!!!!! <<<<<<<<<<<<<<<<<<<
                 }
             }
         }

@@ -39,6 +39,6 @@ public class Harvestable : MonoBehaviour
 
     private void takeHit()
     {
-        itemManager.PlaySound("hitHard");
+        itemManager.PlaySound("hitHard", gameObject.GetComponent<AudioSource>());
     }
 }

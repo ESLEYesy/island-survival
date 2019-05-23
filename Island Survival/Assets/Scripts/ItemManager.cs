@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,6 @@ public class ItemManager : MonoBehaviour
 {
 
     //Sounds
-    public AudioSource physicalAudioSource;
-
     public AudioClip foodEat;
     public AudioClip crateBreak;
     public AudioClip drinkGulp;
@@ -20,8 +19,6 @@ public class ItemManager : MonoBehaviour
     public AudioClip takeDamage;
     public AudioClip playerDeath;
 
-
-    public AudioSource headAudioSource;
     public AudioClip bubble;
     public AudioClip lightTick;
     public AudioClip interfaceError;
@@ -71,7 +68,57 @@ public class ItemManager : MonoBehaviour
         };
     }
 
-    public void spawnParticle(string particle, Vector3 pos, string particleString)
+    public void SpawnItem(GameObject item, Vector3 position, Quaternion rotation, Vector3 velocity, Vector3 torque)
+    {
+        GameObject spawn;
+        if(item != null)
+        {
+            spawn = GameObject.Instantiate(item, position, rotation);
+            spawn.GetComponent<Rigidbody>().AddForce(velocity);
+            spawn.GetComponent<Rigidbody>().AddTorque(torque);
+        }
+    }
+
+    public Vector3 RandomRange(float min, float max, bool upwardsBias)
+    {
+        return new Vector3(UnityEngine.Random.Range(min, max),
+            (upwardsBias ? Math.Abs(UnityEngine.Random.Range(min, max) * (upwardsBias ? 3f : 1f)) : UnityEngine.Random.Range(min, max) * (upwardsBias ? 3f : 1f)),
+            UnityEngine.Random.Range(min, max));
+    }
+
+    public Vector3 RandomRange(float min, float max)
+    {
+        return RandomRange(min, max, false);
+    }
+
+    public void LaunchItem(GameObject item, Vector3 position, Quaternion rotation)
+    {
+        SpawnItem(item, position, rotation, (Camera.main.transform.up * 24 + RandomRange(-2, 2, true)), RandomRange(-10, 10, false));
+    }
+
+    public GameObject GetItem(string item)
+    {
+        switch (item)
+        {
+            case "Axe":
+                return axePrefab;
+            case "Mace":
+                return macePrefab;
+            case "Machete":
+                return machetePrefab;
+            case "Shiv":
+                return shivPrefab;
+            case "Rum":
+                return rumPrefab;
+            case "Bread":
+                return breadPrefab;
+            case "ItemCrate":
+                return itemCratePrefab;
+        }
+        return null;
+    }
+
+    public void SpawnParticle(string particle, Vector3 pos, string particleString)
     {
         switch (particle)
         {
@@ -83,7 +130,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public void spawnParticle(string particle)
+    public void SpawnParticle(string particle)
     {
 
         switch (particle) {
@@ -115,7 +162,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.hitTime = 0.6f;
                 box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Mace!");
-                PlaySound("attackSwing");
+                PlaySound("attackSwing", user.actionSound);
                 break;
             case "Machete":
                 //use Machete
@@ -130,7 +177,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.hitTime = 0.3f;
                 box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Machete!");
-                PlaySound("attackSwing");
+                PlaySound("attackSwing", user.actionSound);
                 break;
             case "Shiv":
                 //use Shiv
@@ -145,7 +192,7 @@ public class ItemManager : MonoBehaviour
                 hbScript.hitTime = 0.1f;
                 box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Shiv!");
-                PlaySound("attackSwing");
+                PlaySound("attackSwing", user.actionSound);
                 break;
             case "Axe":
                 //use Axe
@@ -160,17 +207,17 @@ public class ItemManager : MonoBehaviour
                 hbScript.hitTime = 0.2f;
                 box.GetComponent<MeshRenderer>().enabled = visibleHitboxes;
                 Debug.Log(user.playerName + " swung their Axe!");
-                PlaySound("attackSwing");
+                PlaySound("attackSwing", user.actionSound);
                 break;
             case "Bread":
                 //use Bread
-                user.gainEnergy(50);
-                PlaySound("foodEat");
+                user.GainEnergy(50);
+                PlaySound("foodEat", user.actionSound);
                 user.DestroyEquippedItem();
                 break;
             case "Rum":
-                user.gainHealth(15);
-                PlaySound("drinkGulp");
+                user.GainHealth(15);
+                PlaySound("drinkGulp", user.actionSound);
                 user.DestroyEquippedItem();
                 break;
             default:
@@ -180,7 +227,7 @@ public class ItemManager : MonoBehaviour
         }
     }
 
-    public Sprite getSprite(string item)
+    public Sprite GetSprite(string item)
     {
         switch (item)
         {
@@ -202,73 +249,73 @@ public class ItemManager : MonoBehaviour
         return defaultSprite;
     }
 
-    public void PlaySound(string sound)
+    public void PlaySound(string sound, AudioSource source)
     {
         switch (sound)
         {
             case "foodEat":
-                physicalAudioSource.clip = foodEat;
-                physicalAudioSource.Play();
+                source.clip = foodEat;
+                source.Play();
                 break;
             case "crateBreak":
-                physicalAudioSource.clip = crateBreak;
-                physicalAudioSource.Play();
+                source.clip = crateBreak;
+                source.Play();
                 break;
             case "drinkGulp":
-                physicalAudioSource.clip = drinkGulp;
-                physicalAudioSource.Play();
+                source.clip = drinkGulp;
+                source.Play();
                 break;
             case "attackSwing":
-                physicalAudioSource.clip = attackSwing;
-                physicalAudioSource.Play();
+                source.clip = attackSwing;
+                source.Play();
                 break;
             case "bubble":
-                headAudioSource.clip = bubble;
-                headAudioSource.Play();
+                source.clip = bubble;
+                source.Play();
                 break;
             case "bubbleShort":
-                headAudioSource.clip = bubbleShort;
-                headAudioSource.Play();
+                source.clip = bubbleShort;
+                source.Play();
                 break;
             case "crateOpen":
-                physicalAudioSource.clip = crateOpen;
-                physicalAudioSource.Play();
+                source.clip = crateOpen;
+                source.Play();
                 break;
             case "healDamage":
-                headAudioSource.clip = healDamage;
-                headAudioSource.Play();
+                source.clip = healDamage;
+                source.Play();
                 break;
             case "hitHard":
-                physicalAudioSource.clip = hitHard;
-                physicalAudioSource.Play();
+                source.clip = hitHard;
+                source.Play();
                 break;
             case "hitSoft":
-                physicalAudioSource.clip = hitSoft;
-                physicalAudioSource.Play();
+                source.clip = hitSoft;
+                source.Play();
                 break;
             case "interfaceError":
-                headAudioSource.clip = interfaceError;
-                headAudioSource.Play();
+                source.clip = interfaceError;
+                source.Play();
                 break;
             case "itemDrop":
-                physicalAudioSource.clip = itemDrop;
-                physicalAudioSource.Play();
+                source.clip = itemDrop;
+                source.Play();
                 break;
             case "itemPickup":
-                physicalAudioSource.clip = itemPickup;
-                physicalAudioSource.Play();
+                source.clip = itemPickup;
+                source.Play();
                 break;
             case "takeDamage":
-                physicalAudioSource.clip = takeDamage;
-                physicalAudioSource.Play();
+                source.clip = takeDamage;
+                source.Play();
                 break;
             case "playerDeath":
-                physicalAudioSource.clip = playerDeath;
-                physicalAudioSource.Play();
+                source.clip = playerDeath;
+                source.Play();
                 break;
             case "lightTick":
-                headAudioSource.clip = lightTick;
-                headAudioSource.Play();
+                source.clip = lightTick;
+                source.Play();
                 break;
         }
     }

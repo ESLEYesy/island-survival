@@ -33,7 +33,7 @@ public class Hitbox : MonoBehaviour
         } else if (other.CompareTag("Player"))
         {
             Player p = other.GetComponent<Player>();
-            p.loseHealth(damage);
+            p.LoseHealth(damage);
             Vector3 dir = transform.position - other.transform.position;
             dir = -dir.normalized;
 

@@ -118,7 +118,7 @@ public class Underwater : MonoBehaviour
                     if (bubblesLeft == 0 && isUnderwater && !drowning) // Don't start drowning if we're already drowning.
                     {
                         drowning = true; //start drowning!
-                        player.playSound("bubble");
+                        player.PlaySound("bubble", "voice");
                         InvokeRepeating("Drowning", 1f, 1f); //every 10th of a second
                     }
                 }
@@ -171,7 +171,7 @@ public class Underwater : MonoBehaviour
                     bubble001.gameObject.SetActive(false);
                     break;
             }
-            player.playSound("bubbleShort");
+            player.PlaySound("bubbleShort");
             bubblesLeft = bubblesLeft - 1;
         }
         
@@ -207,6 +207,6 @@ public class Underwater : MonoBehaviour
     // Player loses 10 health every second (10 per second) they have no air
     void Drowning()
     {
-        player.loseHealth(10);
+        player.LoseHealth(10);
     }
 }
